@@ -45,6 +45,9 @@
         <v-alert v-if="letterError == true" type="error">{{
           $t("blacklist_letter_message")
         }}</v-alert>
+        <v-alert v-if="netError == true" type="error">{{
+          $t("network_error")
+        }}</v-alert>
       </v-col>
     </v-row>
   </v-container>
@@ -76,7 +79,8 @@ export default {
     authenticated: null,
     currentUser: null,
     letterError: null,
-    hangmanImage: null
+    hangmanImage: null,
+    netError: null
   }),
 
   methods: {
@@ -89,12 +93,14 @@ export default {
         )
         .then(res => {
           //console.log("RESPONSE RECEIVED: ", res);
+          this.netError = false;
           if (res.data["hangman"] != null) {
             this.hangmanImage = res.data["hangman"];
           }
         })
-        .catch(err => {
-          console.log("AXIOS ERROR: ", err);
+        .catch(() => {
+          //console.log("AXIOS ERROR: ", err);
+          this.netError = true;
         });
     },
     guessLetter() {
@@ -123,6 +129,7 @@ export default {
         })
         .then(res => {
           //console.log("RESPONSE RECEIVED: ", res);
+          this.netError = false;
           if (res.data["victory"] != null) {
             this.victory = res.data["victory"];
             if (this.victory == true) {
@@ -138,8 +145,9 @@ export default {
           this.blacklist = res.data["blacklist"];
           this.getHangmanImage();
         })
-        .catch(err => {
-          console.log("AXIOS ERROR: ", err);
+        .catch(() => {
+          //console.log("AXIOS ERROR: ", err);
+          this.netError = true;
         });
 
       this.desiredLetter = null;
@@ -156,6 +164,7 @@ export default {
         })
         .then(res => {
           //console.log("RESPONSE RECEIVED: ", res);
+          this.netError = false;
           if (res.data["wins"] && res.data["losses"]) {
             this.$emit("winsChanged", res.data["wins"]);
             this.$emit("lossesChanged", res.data["losses"]);
@@ -163,8 +172,9 @@ export default {
             alert(res.data["error"]);
           }
         })
-        .catch(err => {
-          console.log("AXIOS ERROR: ", err);
+        .catch(() => {
+          //console.log("AXIOS ERROR: ", err);
+          this.netError = true;
         });
     },
     setUserScore(status) {
@@ -179,14 +189,16 @@ export default {
         })
         .then(res => {
           //console.log("RESPONSE RECEIVED: ", res);
+          this.netError = false;
           if (res.data["success"]) {
             //pass;
           } else if (res.data["error"]) {
             alert(res.data["error"]);
           }
         })
-        .catch(err => {
-          console.log("AXIOS ERROR: ", err);
+        .catch(() => {
+          //console.log("AXIOS ERROR: ", err);
+          this.netError = true;
         });
     },
 
@@ -202,6 +214,7 @@ export default {
         })
         .then(res => {
           //console.log("RESPONSE RECEIVED: ", res);
+          this.netError = false;
           if (res.data["word"]) {
             this.currentWord = res.data["word"];
             this.lives = res.data["lives"];
@@ -213,8 +226,9 @@ export default {
             alert(res.data["error"]);
           }
         })
-        .catch(err => {
-          console.log("AXIOS ERROR: ", err);
+        .catch(() => {
+          //console.log("AXIOS ERROR: ", err);
+          this.netError = true;
         });
     },
 
@@ -238,14 +252,16 @@ export default {
         })
         .then(res => {
           //console.log("RESPONSE RECEIVED: ", res);
+          this.netError = false;
           if (res.data["word"]) {
             this.currentWord = res.data["word"];
           } else if (res.data["error"]) {
             alert(res.data["error"]);
           }
         })
-        .catch(err => {
-          console.log("AXIOS ERROR: ", err);
+        .catch(() => {
+          //console.log("AXIOS ERROR: ", err);
+          this.netError = true;
         });
     }
   }

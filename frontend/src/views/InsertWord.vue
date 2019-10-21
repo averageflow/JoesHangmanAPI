@@ -87,8 +87,8 @@ export default {
               this.word = "";
             }
           })
-          .catch(err => {
-            console.log("AXIOS ERROR: ", err);
+          .catch(() => {
+            //console.log("AXIOS ERROR: ", err);
             this.netError = true;
           });
       } else {
