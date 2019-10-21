@@ -3,13 +3,36 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class GuessController extends Controller
 {
-    public function respondToGuess()
+    /**
+     * Undocumented function
+     *
+     * @param [type] $user
+     * @param [type] $lives
+     * @param [type] $formattedBlacklist
+     * @param [type] $solution
+     * @return JsonResponse
+     */
+    public function lostGameResponse($user, $lives, $formattedBlacklist, $solution): JsonResponse
     {
-        if (request('letter') !== null && request('user') !== null) {
+        DB::table('users_words')->updateOrInsert(
+            ['user_id' => $user->id],
+            ['lives' => $lives, 'blacklist' => $formattedBlacklist, 'frontend_word' => $solution]
+        );
+        return response()->json(['victory' => false, 'lives' => 0, 'successGuessing' => true, 'currentWord' => $solution, 'blacklist' => $formattedBlacklist]);
+    }
+    /**
+     * Undocumented function
+     *
+     * @return JsonResponse
+     */
+    public function respondToGuess(): JsonResponse
+    {
+        if (request('letter') && request('user')) {
             $requestedLetter = strtoupper(request('letter'));
             $user = DB::table('users')->where('email', '=', request('user'))->first();
             $usersWordData = DB::table('users_words')->where('user_id', '=', $user->id)->first();
@@ -38,36 +61,24 @@ class GuessController extends Controller
                         return response()->json(['victory' => true, 'lives' => $lives, 'successGuessing' => true, 'currentWord' => $dashes, 'blacklist' => $formattedBlacklist]);
                     }
                     return response()->json(['successGuessing' => true, 'lives' => $lives, 'currentWord' => $dashes, 'blacklist' => $formattedBlacklist]);
-                } else {
-                    //BAD GUESS
-                    $lives--;
-                    array_push($blacklist, $requestedLetter);
-                    $formattedBlacklist =  implode(' ', $blacklist);
-                    if ($lives > 0) {
-                        $user = DB::table('users')->where('email', '=', request('user'))->first();
+                }
+                //BAD GUESS
+                $lives--;
+                array_push($blacklist, $requestedLetter);
+                $formattedBlacklist =  implode(' ', $blacklist);
+                if ($lives > 0) {
+                    $user = DB::table('users')->where('email', '=', request('user'))->first();
 
-                        DB::table('users_words')->updateOrInsert(
-                            ['user_id' => $user->id],
-                            ['lives' => $lives, 'blacklist' => $formattedBlacklist]
-                        );
-                        return response()->json(['successGuessing' => false, 'lives' => $lives, 'currentWord' => $current, 'blacklist' => $formattedBlacklist]);
-                    }
-                    //LOST THE GAME
                     DB::table('users_words')->updateOrInsert(
                         ['user_id' => $user->id],
-                        ['lives' => $lives, 'blacklist' => $formattedBlacklist, 'frontend_word'=>$solution]
+                        ['lives' => $lives, 'blacklist' => $formattedBlacklist]
                     );
-                    return response()->json(['victory' => false, 'lives' => 0, 'successGuessing' => true, 'currentWord' => $solution, 'blacklist' => $formattedBlacklist]);
+                    return response()->json(['successGuessing' => false, 'lives' => $lives, 'currentWord' => $current, 'blacklist' => $formattedBlacklist]);
                 }
+                return $this->lostGameResponse($user, $lives, $formattedBlacklist, $solution);
             } else {
-                //LOST THE GAME
-                DB::table('users_words')->updateOrInsert(
-                    ['user_id' => $user->id],
-                    ['lives' => $lives, 'blacklist' => $formattedBlacklist, 'frontend_word'=>$solution]
-                );
-                return response()->json(['victory' => false, 'lives' => 0, 'successGuessing' => true, 'currentWord' => $solution, 'blacklist' => $formattedBlacklist]);
+                return $this->lostGameResponse($user, $lives, $formattedBlacklist, $solution);
             }
-
 
             return response()->json(['successGuessing' => false, 'currentWord' => $solution, 'lives' => $lives, 'currentWord' => $current]);
         }

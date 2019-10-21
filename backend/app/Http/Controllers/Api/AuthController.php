@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
 use Validator;
 
 class AuthController extends Controller
 {
     public $successStatus = 200;
 
-    public function register(Request $request)
+    public function register(Request $request):JsonResponse
     {
         $validator = Validator::make(
             $request->all(),
@@ -34,7 +35,7 @@ class AuthController extends Controller
     }
 
 
-    public function login()
+    public function login():JsonResponse
     {
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
             $user = Auth::user();
@@ -45,7 +46,7 @@ class AuthController extends Controller
         }
     }
 
-    public function getUser()
+    public function getUser():JsonResponse
     {
         $user = Auth::user();
         return response()->json(['success' => $user], $this->successStatus);

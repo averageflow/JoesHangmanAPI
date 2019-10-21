@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class ScoreController extends Controller
 {
-    public function getScore()
+    public function getScore():JsonResponse
     {
         $user = DB::table('users')->where('email', '=', request('user'))->first();
 
@@ -17,7 +18,7 @@ class ScoreController extends Controller
         }
         return response()->json(["error" => "Could not get score!"]);
     }
-    public function setScore()
+    public function setScore():JsonResponse
     {
         $outcome = request('outcome');
         $user = DB::table('users')->where('email', '=', request('user'))->first();
