@@ -7,7 +7,7 @@
             <v-icon>mdi-view-dashboard</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>{{$t('game')}}</v-list-item-title>
+            <v-list-item-title>{{ $t("game") }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item @click="goToLogin()">
@@ -15,7 +15,7 @@
             <v-icon>mdi-account-circle</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>{{$t('login')}}</v-list-item-title>
+            <v-list-item-title>{{ $t("login") }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item @click="goToRegister()">
@@ -23,7 +23,7 @@
             <v-icon>mdi-account-heart</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>{{$t('register')}}</v-list-item-title>
+            <v-list-item-title>{{ $t("register") }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item @click="goToInsertWord()">
@@ -31,7 +31,7 @@
             <v-icon>mdi-currency-twd</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>{{$t('insert_word')}}</v-list-item-title>
+            <v-list-item-title>{{ $t("insert_word") }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -39,13 +39,18 @@
 
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>{{$t('joes_hangman')}}</v-toolbar-title>
+      <v-toolbar-title>{{ $t("joes_hangman") }}</v-toolbar-title>
     </v-app-bar>
 
     <v-content>
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
-          <router-view @winsChanged="setWins" @lossesChanged="setLosses" @userChanged="setCurrentUser" @authenticatedChanged="setAuthenticated"></router-view>
+          <router-view
+            @winsChanged="setWins"
+            @lossesChanged="setLosses"
+            @userChanged="setCurrentUser"
+            @authenticatedChanged="setAuthenticated"
+          ></router-view>
         </v-row>
       </v-container>
     </v-content>
@@ -54,10 +59,13 @@
       <span>
         &copy; 2019 JJBA -
         <span v-if="currentStatus == true">
-          {{$t('logged_as')}}{{this.currentUser}}&nbsp;|&nbsp;
-          <span>{{$t('wins')}}: {{this.wins}} | {{$t('losses')}}: {{this.losses}}</span>
+          {{ $t("logged_as") }}{{ this.currentUser }}&nbsp;|&nbsp;
+          <span
+            >{{ $t("wins") }}: {{ this.wins }} | {{ $t("losses") }}:
+            {{ this.losses }}</span
+          >
         </span>
-        <span v-else>{{$t('please_login')}}</span>
+        <span v-else>{{ $t("please_login") }}</span>
       </span>
     </v-footer>
   </v-app>
@@ -122,10 +130,10 @@ export default {
     setCurrentUser(user) {
       this.currentUser = user;
     },
-    setWins(wins){
+    setWins(wins) {
       this.wins = wins;
     },
-    setLosses(losses){
+    setLosses(losses) {
       this.losses = losses;
     }
   }

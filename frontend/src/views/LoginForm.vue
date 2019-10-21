@@ -8,7 +8,11 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field :label="$t('login')" v-model="login" type="text"></v-text-field>
+              <v-text-field
+                :label="$t('login')"
+                v-model="login"
+                type="text"
+              ></v-text-field>
 
               <v-text-field
                 id="password"
@@ -23,16 +27,20 @@
                 :label="$t('language')"
               ></v-select>
             </v-form>
-            <p>{{$t('lang_notice')}}</p>
+            <p>{{ $t("lang_notice") }}</p>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="performLogin()">{{$t('login')}}</v-btn>
+            <v-btn color="primary" @click="performLogin()">{{
+              $t("login")
+            }}</v-btn>
           </v-card-actions>
         </v-card>
         <br />
-        <v-alert v-if="justCreated == true" type="success">{{t('login_new_account')}}</v-alert>
-        <v-alert v-else type="info">{{$t('login_tip')}}</v-alert>
+        <v-alert v-if="justCreated == true" type="success">{{
+          t("login_new_account")
+        }}</v-alert>
+        <v-alert v-else type="info">{{ $t("login_tip") }}</v-alert>
       </v-col>
     </v-row>
   </v-container>

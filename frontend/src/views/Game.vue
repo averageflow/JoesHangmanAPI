@@ -4,14 +4,18 @@
       <v-col cols="12" sm="10" md="8">
         <v-card class="elevation-12">
           <v-toolbar color="primary" dark flat>
-            <v-btn color="secondary">{{$t('lives')}} {{this.lives}}</v-btn>
+            <v-btn color="secondary">{{ $t("lives") }} {{ this.lives }}</v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="secondary" @click="getRandomWord()">{{$t('new_word')}}</v-btn>
+            <v-btn color="secondary" @click="getRandomWord()">{{
+              $t("new_word")
+            }}</v-btn>
           </v-toolbar>
           <v-card-text style="text-align:center;">
-            <h3 style="color:red;letter-spacing:0.6em;">{{this.blacklist}}</h3>
+            <h3 style="color:red;letter-spacing:0.6em;">
+              {{ this.blacklist }}
+            </h3>
             <img width="50%" v-bind:src="hangmanImage" />
-            <h3 style="letter-spacing:0.6em;">{{this.currentWord}}</h3>
+            <h3 style="letter-spacing:0.6em;">{{ this.currentWord }}</h3>
           </v-card-text>
           <v-card-actions>
             <v-row>
@@ -25,14 +29,22 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="6" sm="12">
-                <v-btn color="primary" @click="guessLetter()">{{$t('submit')}}</v-btn>
+                <v-btn color="primary" @click="guessLetter()">{{
+                  $t("submit")
+                }}</v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
         </v-card>
-        <v-alert v-if="victory == true" type="success">{{$t('victory_message')}}</v-alert>
-        <v-alert v-if="victory == false" type="error">{{$t('lost_message')}}</v-alert>
-        <v-alert v-if="letterError == true" type="error">{{$t('blacklist_letter_message')}}</v-alert>
+        <v-alert v-if="victory == true" type="success">{{
+          $t("victory_message")
+        }}</v-alert>
+        <v-alert v-if="victory == false" type="error">{{
+          $t("lost_message")
+        }}</v-alert>
+        <v-alert v-if="letterError == true" type="error">{{
+          $t("blacklist_letter_message")
+        }}</v-alert>
       </v-col>
     </v-row>
   </v-container>
@@ -86,7 +98,7 @@ export default {
         });
     },
     guessLetter() {
-      if(!this.desiredLetter || this.desiredLetter == " "){
+      if (!this.desiredLetter || this.desiredLetter == " ") {
         return;
       }
       if (this.blacklist != null) {

@@ -4,25 +4,47 @@
       <v-col cols="12" sm="8" md="4">
         <v-card class="elevation-12">
           <v-toolbar color="primary" dark flat>
-            <v-toolbar-title>{{$t('make_an_account')}}</v-toolbar-title>
+            <v-toolbar-title>{{ $t("make_an_account") }}</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field v-model="name" :label="$t('name')" type="text"></v-text-field>
-              <v-text-field v-model="email" :label="$t('email')" type="text"></v-text-field>
-              <v-text-field v-model="password" :label="$t('password')" type="password"></v-text-field>
-              <v-text-field v-model="c_password" :label="$t('confirm_password')" type="password"></v-text-field>
+              <v-text-field
+                v-model="name"
+                :label="$t('name')"
+                type="text"
+              ></v-text-field>
+              <v-text-field
+                v-model="email"
+                :label="$t('email')"
+                type="text"
+              ></v-text-field>
+              <v-text-field
+                v-model="password"
+                :label="$t('password')"
+                type="password"
+              ></v-text-field>
+              <v-text-field
+                v-model="c_password"
+                :label="$t('confirm_password')"
+                type="password"
+              ></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="registerUser()">{{$t('register')}}</v-btn>
+            <v-btn color="primary" @click="registerUser()">{{
+              $t("register")
+            }}</v-btn>
           </v-card-actions>
         </v-card>
         <br />
-        <v-alert v-if="netError" type="warning">{{$t('error_connecting')}}</v-alert>
+        <v-alert v-if="netError" type="warning">{{
+          $t("error_connecting")
+        }}</v-alert>
         <br />
-        <v-alert v-if="passError" type="warning">{{$t('password_error')}}</v-alert>
+        <v-alert v-if="passError" type="warning">{{
+          $t("password_error")
+        }}</v-alert>
       </v-col>
     </v-row>
   </v-container>
