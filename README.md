@@ -2,7 +2,7 @@
 
 This project has been completely done by Josep Jesus Bigorra Algaba. It consists of an API made with Laravel and a frontend made with Vue.js.
 
-[Hangman Showcase 1](https://raw.githubusercontent.com/averageflow/Joe-s-Hangman-API/master/screenshots/1.png)
+![Hangman Showcase 1](https://raw.githubusercontent.com/averageflow/Joe-s-Hangman-API/master/screenshots/1.png)
 
 The initial goals have been achieved and surpassed. The backend and frontend are loosely coupled for ease of development and maximum uptime if this were to go to production.
 
@@ -22,11 +22,11 @@ In order to run the Feature and Unit tests on the API you should first run the b
 
 Please login to the application by registering a new account or by using the provided details in the login page. Also make sure to allow cookies in your browser for the best functionality.
 
-[Hangman Showcase 2](https://raw.githubusercontent.com/averageflow/Joe-s-Hangman-API/master/screenshots/2.png)
+![Hangman Showcase 2](https://raw.githubusercontent.com/averageflow/Joe-s-Hangman-API/master/screenshots/2.png)
 
 It is possible to expand the game by adding new words into the different languages. Keep in mind by changing the display language you also change the words available.
 
-[Hangman Showcase 3](https://raw.githubusercontent.com/averageflow/Joe-s-Hangman-API/master/screenshots/3.png)
+![Hangman Showcase 3](https://raw.githubusercontent.com/averageflow/Joe-s-Hangman-API/master/screenshots/3.png)
 
 Any contribution, suggestion or security flaw should be communicated to me via email to `jjba@protonmail.ch`.
 
