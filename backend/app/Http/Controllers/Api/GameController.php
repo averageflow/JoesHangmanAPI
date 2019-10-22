@@ -14,6 +14,7 @@ use stdClass;
 
 class GameController extends Controller
 {
+
     /**
      * Game process evaluation
      *
@@ -52,7 +53,6 @@ class GameController extends Controller
             array_push($blacklist, $requestedLetter);
             $formattedBlacklist =  implode(' ', $blacklist);
             if ($lives > 0) {
-                $user = $this->commonUtils->getUserByEmail(request('user'));
                 $this->commonUtils->badGuessUpdateDB($user, $lives, $formattedBlacklist);
 
                 return response()->json(['successGuessing' => false, 'lives' => $lives, 'currentWord' => $current, 'blacklist' => $formattedBlacklist]);
@@ -90,6 +90,14 @@ class GameController extends Controller
         return response()->json(['victory' => true, 'lives' => $lives, 'successGuessing' => true, 'currentWord' => $dashes, 'blacklist' => $formattedBlacklist]);
     }
 
+    public function sanitizeRequestedLetter(string $str): string
+    {
+        if($str == "0"){
+            return "A";
+        }
+        return trim(strtoupper($str));
+     }
+
     /**
      * Respond to a letter guess
      *
@@ -97,9 +105,9 @@ class GameController extends Controller
      */
     public function respondToGuess(): JsonResponse
     {
-        if (request('letter') && request('user')) {
+        $requestedLetter = $this->sanitizeRequestedLetter(request('letter'));
+        if ($requestedLetter && request('user')) {
 
-            $requestedLetter = strtoupper(request('letter'));
             $user = $this->commonUtils->getUserByEmail(request('user'));
             $usersWordData = $this->commonUtils->getUserWordData($user);
 

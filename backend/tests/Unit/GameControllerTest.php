@@ -46,7 +46,7 @@ class GameControllerTest extends TestCase
         $gameController = new GameController();
         $user = (object) ['id' => '1', 'email' => 'support@testuser.com'];
         $response = $gameController->gameEval(5, "PINDAKAAS", "_________", ['Z', 'X'], 'L', $user);
-        $expected = ['lives' => 5, 'successGuessing' => false, 'currentWord' => "PINDAKAAS", 'blacklist' => " Z X"];
+        $expected = response()->json(['successGuessing' => false, 'lives' => 4, 'currentWord' => "_________", 'blacklist' => "Z X L"]);
         $this->assertEquals($expected, $response);
     }
 }

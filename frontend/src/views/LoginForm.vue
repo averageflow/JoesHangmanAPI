@@ -8,11 +8,7 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field
-                :label="$t('login')"
-                v-model="login"
-                type="text"
-              ></v-text-field>
+              <v-text-field :label="$t('login')" v-model="login" type="text"></v-text-field>
 
               <v-text-field
                 id="password"
@@ -31,15 +27,19 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="performLogin()">{{
+            <v-btn color="primary" @click="performLogin()">
+              {{
               $t("login")
-            }}</v-btn>
+              }}
+            </v-btn>
           </v-card-actions>
         </v-card>
         <br />
-        <v-alert v-if="justCreated == true" type="success">{{
+        <v-alert v-if="justCreated == true" type="success">
+          {{
           t("login_new_account")
-        }}</v-alert>
+          }}
+        </v-alert>
         <v-alert v-else type="info">{{ $t("login_tip") }}</v-alert>
       </v-col>
     </v-row>
@@ -89,7 +89,6 @@ export default {
       this.$http
         .post(this.$baseURI + "login", postData, {})
         .then(res => {
-          //console.log("RESPONSE RECEIVED: ", res);
           if (res.data["success"] != null) {
             this.$cookies.set("authenticated", true);
             this.$cookies.set("currentUser", postData["email"]);
@@ -105,7 +104,6 @@ export default {
           }
         })
         .catch(() => {
-          //console.log("AXIOS ERROR: ", err);
           //pass;
         });
     }

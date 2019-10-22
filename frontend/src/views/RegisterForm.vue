@@ -8,43 +8,33 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field
-                v-model="name"
-                :label="$t('name')"
-                type="text"
-              ></v-text-field>
-              <v-text-field
-                v-model="email"
-                :label="$t('email')"
-                type="text"
-              ></v-text-field>
-              <v-text-field
-                v-model="password"
-                :label="$t('password')"
-                type="password"
-              ></v-text-field>
-              <v-text-field
-                v-model="c_password"
-                :label="$t('confirm_password')"
-                type="password"
-              ></v-text-field>
+              <v-text-field v-model="name" :label="$t('name')" type="text"></v-text-field>
+              <v-text-field v-model="email" :label="$t('email')" type="text"></v-text-field>
+              <v-text-field v-model="password" :label="$t('password')" type="password"></v-text-field>
+              <v-text-field v-model="c_password" :label="$t('confirm_password')" type="password"></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="registerUser()">{{
+            <v-btn color="primary" @click="registerUser()">
+              {{
               $t("register")
-            }}</v-btn>
+              }}
+            </v-btn>
           </v-card-actions>
         </v-card>
         <br />
-        <v-alert v-if="netError" type="warning">{{
+        <v-alert v-if="netError" type="warning">
+          {{
           $t("error_connecting")
-        }}</v-alert>
+          }}
+        </v-alert>
         <br />
-        <v-alert v-if="passError" type="warning">{{
+        <v-alert v-if="passError" type="warning">
+          {{
           $t("password_error")
-        }}</v-alert>
+          }}
+        </v-alert>
       </v-col>
     </v-row>
   </v-container>
@@ -79,7 +69,6 @@ export default {
         this.$http
           .post(this.$baseURI + "register", postData, axiosConfig)
           .then(res => {
-            //console.log("RESPONSE RECEIVED: ", res);
             if (res.data["success"] != null) {
               router.push({
                 name: "login",
@@ -88,7 +77,6 @@ export default {
             }
           })
           .catch(() => {
-            //console.log("AXIOS ERROR: ", err);
             this.netError = true;
           });
       } else {

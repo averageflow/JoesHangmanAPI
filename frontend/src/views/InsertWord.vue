@@ -8,33 +8,31 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field
-                v-model="word"
-                :label="$t('word')"
-                type="text"
-              ></v-text-field>
-              <v-select
-                :items="languages"
-                v-model="chosenLanguage"
-                :label="$t('language')"
-              ></v-select>
+              <v-text-field v-model="word" :label="$t('word')" type="text"></v-text-field>
+              <v-select :items="languages" v-model="chosenLanguage" :label="$t('language')"></v-select>
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="insertNewWord()">{{
+            <v-btn color="primary" @click="insertNewWord()">
+              {{
               $t("insert")
-            }}</v-btn>
+              }}
+            </v-btn>
           </v-card-actions>
         </v-card>
         <br />
-        <v-alert v-if="successInserting == true" type="success">{{
+        <v-alert v-if="successInserting == true" type="success">
+          {{
           $t("success_inserting")
-        }}</v-alert>
+          }}
+        </v-alert>
         <br />
-        <v-alert v-if="netError == true" type="error">{{
+        <v-alert v-if="netError == true" type="error">
+          {{
           $t("network_error")
-        }}</v-alert>
+          }}
+        </v-alert>
       </v-col>
     </v-row>
   </v-container>
@@ -81,14 +79,12 @@ export default {
             headers: { Authorization: "Bearer " + this.$cookies.get("token") }
           })
           .then(res => {
-            //console.log("RESPONSE RECEIVED: ", res);
             if (res.data["success"]) {
               this.successInserting = true;
               this.word = "";
             }
           })
           .catch(() => {
-            //console.log("AXIOS ERROR: ", err);
             this.netError = true;
           });
       } else {

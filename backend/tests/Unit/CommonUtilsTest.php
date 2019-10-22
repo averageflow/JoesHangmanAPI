@@ -6,17 +6,35 @@ use Tests\TestCase;
 use App\Http\Controllers\Api\CommonUtils;
 use Illuminate\Support\Facades\DB;
 
-
 class CommonUtilsTest extends TestCase
 {
     /**
+     * Get Auth token for API
+     *
+     * @return string
+     */
+    public function getToken(): string
+    {
+        $data = [
+            'email' => 'support@testuser.com',
+            'password' => '123456'
+        ];
+
+        $response = $this->json('POST', '/api/v1/login', $data);
+        $response->assertStatus(200);
+        $content = $response->decodeResponseJson();
+        $myToken = $content["success"]["token"];
+        return 'Bearer ' . $myToken;
+    }
+
+    /**
      * Get user Collection by email
      */
-    public function testGetUserByEmail(): void
+    public function testGetUser(): void
     {
-        $user = (object) ['id' => '1', 'email' => 'support@testuser.com'];
-        $utils = new CommonUtils();
-        $this->assertEquals($user, $utils->getUserByEmail('support@testuser.com'));
+        $response = $this->withHeaders(['Authorization' => $this->getToken()])->json('POST','/api/v1/get_user_by_id', ["id"=>1]);
+        //fwrite(STDERR, print_r($response->decodeResponseJson(), TRUE));
+        $response->assertJsonStructure(['id', 'email','name','email_verified_at','password','remember_token', 'created_at', 'updated_at']);
     }
 
     /**
@@ -38,6 +56,6 @@ class CommonUtilsTest extends TestCase
         $letters = ["P", "I", "N", "D", "A", "K", "A", "A", "S"];
         $dashes = ["_", "_", "_", "_", "_", "_", "_", "_", "_"];
         $requestedLetter = "A";
-        $this->assertEquals(["_", "_", "_", "_", "A", "_", "A", "A", "_"], $utils->replaceGuessedLetters($letters, $requestedLetter, $dashes));
+        $this->assertEquals(implode("",["_", "_", "_", "_", "A", "_", "A", "A", "_"]), $utils->replaceGuessedLetters($letters, $requestedLetter, $dashes));
     }
 }

@@ -18,11 +18,12 @@ class ImageController extends Controller
      */
     public function getHangman($lives = null): JsonResponse
     {
-        if ($lives) {
+        if ($lives != null) {
             $image = DB::table('hangman_images')->where('lives', '=', $lives)->first()->data;
             return response()->json(['hangman' => $image]);
+        } else {
+            $image = DB::table('hangman_images')->where('lives', '=', request('lives'))->first()->data;
+            return response()->json(['hangman' => $image]);
         }
-        $image = DB::table('hangman_images')->where('lives', '=', request('lives'))->first()->data;
-        return response()->json(['hangman' => $image]);
     }
 }

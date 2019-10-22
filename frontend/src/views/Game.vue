@@ -6,14 +6,14 @@
           <v-toolbar color="primary" dark flat>
             <v-btn color="secondary">{{ $t("lives") }} {{ this.lives }}</v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="secondary" @click="getRandomWord()">{{
+            <v-btn color="secondary" @click="getRandomWord()">
+              {{
               $t("new_word")
-            }}</v-btn>
+              }}
+            </v-btn>
           </v-toolbar>
           <v-card-text style="text-align:center;">
-            <h3 style="color:red;letter-spacing:0.6em;">
-              {{ this.blacklist }}
-            </h3>
+            <h3 style="color:red;letter-spacing:0.6em;">{{ this.blacklist }}</h3>
             <img width="50%" v-bind:src="hangmanImage" />
             <h3 style="letter-spacing:0.6em;">{{ this.currentWord }}</h3>
           </v-card-text>
@@ -29,25 +29,35 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="6" sm="12">
-                <v-btn color="primary" @click="guessLetter()">{{
+                <v-btn color="primary" @click="guessLetter()">
+                  {{
                   $t("submit")
-                }}</v-btn>
+                  }}
+                </v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
         </v-card>
-        <v-alert v-if="victory == true" type="success">{{
+        <v-alert v-if="victory == true" type="success">
+          {{
           $t("victory_message")
-        }}</v-alert>
-        <v-alert v-if="victory == false" type="error">{{
+          }}
+        </v-alert>
+        <v-alert v-if="victory == false" type="error">
+          {{
           $t("lost_message")
-        }}</v-alert>
-        <v-alert v-if="letterError == true" type="error">{{
+          }}
+        </v-alert>
+        <v-alert v-if="letterError == true" type="error">
+          {{
           $t("blacklist_letter_message")
-        }}</v-alert>
-        <v-alert v-if="netError == true" type="error">{{
+          }}
+        </v-alert>
+        <v-alert v-if="netError == true" type="error">
+          {{
           $t("network_error")
-        }}</v-alert>
+          }}
+        </v-alert>
       </v-col>
     </v-row>
   </v-container>
@@ -92,14 +102,12 @@ export default {
           { headers: { Authorization: "Bearer " + this.myToken } }
         )
         .then(res => {
-          //console.log("RESPONSE RECEIVED: ", res);
           this.netError = false;
           if (res.data["hangman"] != null) {
             this.hangmanImage = res.data["hangman"];
           }
         })
         .catch(() => {
-          //console.log("AXIOS ERROR: ", err);
           this.netError = true;
         });
     },
@@ -109,7 +117,6 @@ export default {
       }
       if (this.blacklist != null) {
         let myForbiddenLetters = this.blacklist.split(" ");
-        //console.log(myForbiddenLetters);
         if (myForbiddenLetters.includes(this.desiredLetter.toUpperCase())) {
           this.letterError = true;
           this.desiredLetter = null;
@@ -128,10 +135,10 @@ export default {
           headers: { Authorization: "Bearer " + this.myToken }
         })
         .then(res => {
-          //console.log("RESPONSE RECEIVED: ", res);
           this.netError = false;
-          if (res.data["victory"]) {
+          if (res.data["victory"] != null) {
             this.victory = res.data["victory"];
+
             if (this.victory == true) {
               this.setUserScore("won");
               this.getUserScore();
@@ -146,7 +153,6 @@ export default {
           this.getHangmanImage();
         })
         .catch(() => {
-          //console.log("AXIOS ERROR: ", err);
           this.netError = true;
         });
 
@@ -163,7 +169,6 @@ export default {
           headers: { Authorization: "Bearer " + this.myToken }
         })
         .then(res => {
-          //console.log("RESPONSE RECEIVED: ", res);
           this.netError = false;
           if (res.data["wins"] && res.data["losses"]) {
             this.$emit("winsChanged", res.data["wins"]);
@@ -173,7 +178,6 @@ export default {
           }
         })
         .catch(() => {
-          //console.log("AXIOS ERROR: ", err);
           this.netError = true;
         });
     },
@@ -188,7 +192,6 @@ export default {
           headers: { Authorization: "Bearer " + this.myToken }
         })
         .then(res => {
-          //console.log("RESPONSE RECEIVED: ", res);
           this.netError = false;
           if (res.data["success"]) {
             //pass;
@@ -197,7 +200,6 @@ export default {
           }
         })
         .catch(() => {
-          //console.log("AXIOS ERROR: ", err);
           this.netError = true;
         });
     },
@@ -213,7 +215,6 @@ export default {
           headers: { Authorization: "Bearer " + this.myToken }
         })
         .then(res => {
-          //console.log("RESPONSE RECEIVED: ", res);
           this.netError = false;
           if (res.data["word"]) {
             this.currentWord = res.data["word"];
@@ -227,7 +228,6 @@ export default {
           }
         })
         .catch(() => {
-          //console.log("AXIOS ERROR: ", err);
           this.netError = true;
         });
     },
@@ -251,7 +251,6 @@ export default {
           headers: { Authorization: "Bearer " + this.myToken }
         })
         .then(res => {
-          //console.log("RESPONSE RECEIVED: ", res);
           this.netError = false;
           if (res.data["word"]) {
             this.currentWord = res.data["word"];
@@ -260,7 +259,6 @@ export default {
           }
         })
         .catch(() => {
-          //console.log("AXIOS ERROR: ", err);
           this.netError = true;
         });
     }

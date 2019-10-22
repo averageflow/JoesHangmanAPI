@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
@@ -19,6 +20,17 @@ class CommonUtils
     public function getUserByEmail(string $email): stdClass
     {
         return DB::table('users')->where('email', '=', $email)->first();
+    }
+
+    /**
+     * Return user details when ID is provided
+     *
+     * @return JsonResponse
+     */
+    public function getUserByID(): JsonResponse
+    {
+        $userDetails = (array) DB::table('users')->where('id', '=', request('id'))->first();
+        return response()->json($userDetails);
     }
 
     /**
