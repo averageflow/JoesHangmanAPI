@@ -130,7 +130,7 @@ export default {
         .then(res => {
           //console.log("RESPONSE RECEIVED: ", res);
           this.netError = false;
-          if (res.data["victory"] != null) {
+          if (res.data["victory"]) {
             this.victory = res.data["victory"];
             if (this.victory == true) {
               this.setUserScore("won");

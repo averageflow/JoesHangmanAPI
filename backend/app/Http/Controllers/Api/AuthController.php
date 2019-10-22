@@ -8,11 +8,18 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use Validator;
-
+/**
+ * Controls authentication mechanisms
+ */
 class AuthController extends Controller
 {
     public $successStatus = 200;
-
+    /**
+     * Register user in application
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function register(Request $request):JsonResponse
     {
         $validator = Validator::make(
@@ -34,7 +41,11 @@ class AuthController extends Controller
         return response()->json(['success' => $success], $this->successStatus);
     }
 
-
+    /**
+     * Log user in to application
+     *
+     * @return JsonResponse
+     */
     public function login():JsonResponse
     {
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
@@ -45,7 +56,11 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorised'], 401);
         }
     }
-
+    /**
+     * Get the user token
+     *
+     * @return JsonResponse
+     */
     public function getUser():JsonResponse
     {
         $user = Auth::user();

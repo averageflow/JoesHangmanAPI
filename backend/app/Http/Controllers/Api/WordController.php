@@ -6,26 +6,19 @@ use App\Http\Controllers\Controller;
 use App\WordsModel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Api\CommonUtils;
 
 class WordController extends Controller
 {
+    protected $commonUtils;
+
     /**
-     * Undocumented function
+     * Transform word to frontend version enigma
      *
-     * @param [type] $email
-     * @return void
-     */
-    public function getUserByEmail($email)
-    {
-        return DB::table('users')->where('email', '=', $email)->first();
-    }
-    /**
-     * Undocumented function
-     *
-     * @param [type] $letter
+     * @param string $letter
      * @return string
      */
-    public function transformToFrontEndWord($letter): string
+    public function transformToFrontEndWord(string $letter): string
     {
         if ($letter == "-") {
             return "-";
@@ -37,11 +30,11 @@ class WordController extends Controller
     }
 
     /**
-     * Undocumented function
+     * Fetch new word and corresponding enigma
      *
-     * @return JsonResponse
+     * @return array
      */
-    public function getRandomWord(): JsonResponse
+    public function fetchNewFrontEndWord(): array
     {
         $randomWord = WordsModel::select('word')->where('language', '=', request('language'))->inRandomOrder()->first()->word;
 
@@ -50,26 +43,36 @@ class WordController extends Controller
         for ($i = 0; $i < strlen($randomWord); $i++) {
             $frontEndWord .= $this->transformToFrontEndWord($randomWord[$i]);
         }
+        return ["solution" => $randomWord, "enigma" => $frontEndWord];
+    }
+
+
+    /**
+     * Get random word from list, according to language
+     *
+     * @return JsonResponse
+     */
+    public function getRandomWord(): JsonResponse
+    {
+        $words = $this->fetchNewFrontEndWord();
 
         if (request('newWord') == true && request('user')) {
-            $user = $this->getUserByEmail(request('user'));
-            DB::table('users_words')->updateOrInsert(
-                ['user_id' => $user->id],
-                ['word' => $randomWord, 'frontend_word' => $frontEndWord, 'lives' => 12, 'blacklist' => '']
-            );
-            return response()->json(['word' => $frontEndWord, 'lives' => 12]);
+            $user = $this->commonUtils->getUserByEmail(request('user'));
+            $this->commonUtils->renewUserWords($user, $words, 12);
+            return response()->json(['word' => $words["enigma"], 'lives' => 12]);
         }
         return response()->json(['error' => 'There was an error fetching a new word!']);
     }
+
     /**
-     * Undocumented function
+     * Get current DB data for user's word
      *
      * @return JsonResponse
      */
     public function getCurrentWord(): JsonResponse
     {
         if (request('newWord') == false && request('user')) {
-            $user = $this->getUserByEmail(request('user'));
+            $user = $this->commonUtils->getUserByEmail(request('user'));
             $userWordData = DB::table('users_words')->where('user_id', '=', $user->id)->first();
             if (!$userWordData) {
                 return response()->json(['status' => 'No records available!']);
@@ -79,9 +82,11 @@ class WordController extends Controller
             $blacklist = $userWordData->blacklist;
             return response()->json(['word' => $currentWord, 'lives' => $lives, 'blacklist' => $blacklist]);
         }
+        return response()->json(['error' => "There was an error fetching user's word!"]);
     }
+
     /**
-     * Undocumented function
+     * Insert new word to DB
      *
      * @return JsonResponse
      */
@@ -91,5 +96,11 @@ class WordController extends Controller
             DB::table('words')->insert(['word' => request('word'), 'language' => request('language')]);
             return response()->json(['success' => true]);
         }
+        return response()->json(['error' => 'There was an error inserting a new word!']);
+    }
+
+    public function __construct()
+    {
+        $this->commonUtils = new CommonUtils();
     }
 }

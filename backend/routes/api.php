@@ -26,7 +26,7 @@ Route::prefix('v1')->group(function () {
     Route::group(['middleware' => 'auth:api'], function () {
         Route::post('get_word', 'Api\WordController@getRandomWord');
         Route::post('get_current_word', 'Api\WordController@getCurrentWord');
-        Route::post('guess_letter', 'Api\GuessController@respondToGuess');
+        Route::post('guess_letter', 'Api\GameController@respondToGuess');
         Route::post('insert_word', 'Api\WordController@insertNewWord');
         Route::post('get_hangman', 'Api\ImageController@getHangman');
         Route::post('get_score', 'Api\ScoreController@getScore');
