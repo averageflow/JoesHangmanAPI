@@ -38,6 +38,6 @@ class CommonUtilsTest extends TestCase
         $letters = ["P", "I", "N", "D", "A", "K", "A", "A", "S"];
         $dashes = ["_", "_", "_", "_", "_", "_", "_", "_", "_"];
         $requestedLetter = "A";
-        $this->assertEquals(["_", "_", "_", "_", "A", "_", "A", "A", "_"], $utils->testReplaceGuessedLetters($letters, $requestedLetter, $dashes));
+        $this->assertEquals(["_", "_", "_", "_", "A", "_", "A", "A", "_"], $utils->replaceGuessedLetters($letters, $requestedLetter, $dashes));
     }
 }

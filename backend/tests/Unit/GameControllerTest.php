@@ -18,7 +18,7 @@ class GameControllerTest extends TestCase
         $gameController = new GameController();
         $user = (object) ['id' => '1', 'email' => 'support@testuser.com'];
         $response = $gameController->gameEval(0, "PINDAKAAS", "_________", ['Z', 'X'], 'L', $user);
-        $expected = ['victory' => false, 'lives' => 0, 'successGuessing' => true, 'currentWord' => "PINDAKAAS", 'blacklist' => " Z X"];
+        $expected = response()->json(['victory' => false, 'lives' => 0, 'successGuessing' => true, 'currentWord' => "PINDAKAAS", 'blacklist' => "Z X"]);
         $this->assertEquals($expected, $response);
     }
 
@@ -32,7 +32,7 @@ class GameControllerTest extends TestCase
         $gameController = new GameController();
         $user = (object) ['id' => '1', 'email' => 'support@testuser.com'];
         $response = $gameController->gameEval(5, "PINDAKAAS", "_________", ['Z', 'X'], 'P', $user);
-        $expected = ['victory' => true, 'lives' => 5, 'successGuessing' => true, 'currentWord' => "PINDAKAAS", 'blacklist' => " Z X"];
+        $expected = response()->json(['successGuessing' => true, 'lives' => 5, 'currentWord' => "P________", 'blacklist' => "Z X"]);
         $this->assertEquals($expected, $response);
     }
 
