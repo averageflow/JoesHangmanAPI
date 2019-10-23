@@ -6,6 +6,8 @@ This project has been completely done by Josep Jesus Bigorra Algaba. It consists
 
 The initial goals have been achieved and surpassed. The backend and frontend are loosely coupled for ease of development and maximum uptime if this were to go to production.
 
+To install the project's dependencies `cd` into the folder and `composer install`.
+
 In order to run the API in a production environment please place it in a server like Apache or Nginx. Since this is a development showcase I have been using it with `php artisan serve --host 192.168.178.68`.
 
 The API by default runs in the `:8000` port.
