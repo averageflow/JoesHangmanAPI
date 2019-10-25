@@ -76,6 +76,7 @@ export default {
 
     if (this.currentStatus == true) {
       this.getCurrentWord();
+      this.getUserScore();
     } else {
       router.push({ name: "login" });
     }

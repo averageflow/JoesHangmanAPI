@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Repositories\Interfaces\UserWordsRepoInterface;
+use App\Repositories\Interfaces\WordsRepoInterface;
 
 class WordController extends Controller
 {
     private $userWordsRepo;
+    private $wordsRepo;
 
-    public function __construct(UserWordsRepoInterface $userWordsRepo)
+    public function __construct(UserWordsRepoInterface $userWordsRepo, WordsRepoInterface $wordsRepo)
     {
         $this->userWordsRepo = $userWordsRepo;
+        $this->wordsRepo = $wordsRepo;
     }
 
 
@@ -27,7 +30,7 @@ class WordController extends Controller
     public function insertNewWord(): JsonResponse
     {
         if (request('word') && request('language')) {
-            return $this->userWordsRepo->insertNewWord(request('word'), request('language'));
+            return $this->wordsRepo->insertNewWord(request('word'), request('language'));
         }
         return response()->json(['error' => 'There was an error inserting a new word!']);
     }

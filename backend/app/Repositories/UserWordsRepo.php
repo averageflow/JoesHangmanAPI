@@ -4,14 +4,21 @@ namespace App\Repositories;
 
 use App\Models\UserWords;
 use App\Models\Users;
-use App\Models\Words;
+
 use App\Repositories\Interfaces\UserWordsRepoInterface;
+use App\Repositories\WordsRepo;
+use App\Repositories\UsersRepo;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Response;
 
 class UserWordsRepo implements UserWordsRepoInterface
 {
+    protected $wordsRepo;
+    protected $usersRepo;
+
+    public function __construct(){
+        $this->wordsRepo = new WordsRepo();
+        $this->usersRepo = new UsersRepo();
+    }
 
     /**
      * Get current DB data for user's word
@@ -21,7 +28,7 @@ class UserWordsRepo implements UserWordsRepoInterface
     public function getCurrentWord(string $user): JsonResponse
     {
 
-        $userID = $this->getUserByEmail($user)->id;
+        $userID = $this->usersRepo->getUserByEmail($user)->id;
         $userWordData = UserWords::where('user_id', '=', $userID)->first();
         if (!$userWordData) {
             return response()->json(['status' => 'No records available!']);
@@ -34,66 +41,6 @@ class UserWordsRepo implements UserWordsRepoInterface
 
 
     /**
-     * Insert new word to DB
-     *
-     * @return JsonResponse
-     */
-    public function insertNewWord(string $word, string $language): JsonResponse
-    {
-        Words::insert(['word' => $word, 'language' => $language]);
-        return response()->json(['success' => true]);
-    }
-
-    /**
-     * Transform word to frontend version enigma
-     *
-     * @param string $letter
-     * @return string
-     */
-    public function transformToFrontEndWord(string $letter): string
-    {
-        if ($letter == "-") {
-            return "-";
-        }
-        if ($letter == " ") {
-            return " ";
-        }
-        return "_";
-    }
-
-    /**
-     * Get user's prefered language
-     *
-     * @param string $user
-     * @return void
-     */
-    public function getUserLang(string $user)
-    {
-        $userID = $this->getUserByEmail($user)->id;
-        return UserWords::select('prefered_language')->where('user_id', '=', $userID)->first()->prefered_language;
-    }
-
-    /**
-     * Fetch new word and corresponding enigma
-     *
-     * @param string $user
-     * @return array
-     */
-    public function fetchNewFrontEndWord(string $user): array
-    {
-        $userLang = $this->getUserLang($user);
-        $randomWord = Words::select('word')->where('language', '=', $userLang)->inRandomOrder()->first()->word;
-
-        $frontEndWord = "";
-
-        for ($i = 0; $i < strlen($randomWord); $i++) {
-            $frontEndWord .= $this->transformToFrontEndWord($randomWord[$i]);
-        }
-        return ["solution" => $randomWord, "enigma" => $frontEndWord];
-    }
-
-
-    /**
      * Get random word from list, according to language
      *
      * @param string $user
@@ -101,36 +48,15 @@ class UserWordsRepo implements UserWordsRepoInterface
      */
     public function getRandomWord(string $user): JsonResponse
     {
-        $words = $this->fetchNewFrontEndWord($user);
+        $words = $this->wordsRepo->fetchNewFrontEndWord($user);
 
-        $userID = $this->getUserByEmail($user)->id;
+        $userID = $this->usersRepo->getUserByEmail($user)->id;
         $this->renewUserWords($userID, $words, 12);
         return response()->json(['word' => $words["enigma"], 'lives' => 12]);
 
         return response()->json(['error' => 'There was an error fetching a new word!']);
     }
-    /**
-     * Get user Collection by email
-     *
-     * @param string $email
-     * @return stdClass
-     */
-    public function getUserByEmail(string $email): Users
-    {
-        return Users::where('email', '=', $email)->first();
-    }
 
-    /**
-     * Return user details when ID is provided
-     *
-     * @param string $id
-     * @return JsonResponse
-     */
-    public function getUserByID(string $id): JsonResponse
-    {
-        $userDetails = (array) Users::where('id', '=', $id)->first();
-        return response()->json($userDetails);
-    }
 
     /**
      * Get user word data for the game
@@ -158,7 +84,7 @@ class UserWordsRepo implements UserWordsRepoInterface
             $dashes[$indexes[$i]] = $requestedLetter;
         }
         $final = implode("", $dashes);
-        Log::error("Final frontend word = ".$final);
+        //Log::error("Final frontend word = ".$final);
         return $final;
     }
 

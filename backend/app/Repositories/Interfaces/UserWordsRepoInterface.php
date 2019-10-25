@@ -2,19 +2,12 @@
 
 namespace App\Repositories\Interfaces;
 
-use App\User;
 use App\Models\Users;
 
 interface UserWordsRepoInterface
 {
     public function getCurrentWord(string $user);
-    public function insertNewWord(string $word, string $language);
-    public function transformToFrontEndWord(string $letter);
-    public function getUserLang(string $user);
-    public function fetchNewFrontEndWord(string $user);
     public function getRandomWord(string $user);
-    public function getUserByEmail(string $email);
-    public function getUserByID(string $id);
     public function getUserWordData(string $id);
     public function replaceGuessedLetters(array $letters, string $requestedLetter, array $dashes);
     public function renewUserWords(string $id, array $words, int $lives);
