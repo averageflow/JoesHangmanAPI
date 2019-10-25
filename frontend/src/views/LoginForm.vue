@@ -62,8 +62,8 @@ export default {
   },
   data: () => ({
     justCreated: false,
-    languages: ["English", "Nederlands"],
-    locales: { English: "en", Nederlands: "nl" },
+    languages: ["English", "Nederlands", "Català", "Português"],
+    locales: { English: "en", Nederlands: "nl", Català: "ca", Português:"pt" },
     chosenLanguage: "English",
     login: null,
     password: null
