@@ -7,6 +7,7 @@ use App\WordsModel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Api\CommonUtils;
+use App\Repositories\Interfaces\WordsRepoInterface;
 
 class WordController extends Controller
 {
@@ -99,8 +100,12 @@ class WordController extends Controller
         return response()->json(['error' => 'There was an error inserting a new word!']);
     }
 
-    public function __construct()
+    private $wordsRepo;
+
+
+    public function __construct(WordsRepoInterface $wordsRepo)
     {
         $this->commonUtils = new CommonUtils();
+        $this->wordsRepo = $wordsRepo;
     }
 }

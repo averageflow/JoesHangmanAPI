@@ -8,6 +8,8 @@ The initial goals have been achieved and surpassed. The backend and frontend are
 
 To install the project's dependencies `cd` into the folder and `composer install`.
 
+Please install an API key for your local version by executing `php artisan passport:install`
+
 In order to run the API in a production environment please place it in a server like Apache or Nginx. Since this is a development showcase I have been using it with `php artisan serve --host 192.168.178.68`.
 
 The API by default runs in the `:8000` port.
