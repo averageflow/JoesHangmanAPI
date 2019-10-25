@@ -22,9 +22,6 @@ class RepositoryServiceProvider extends ServiceProvider
             UserWordsRepoInterface::class,
             UserWordsRepo::class
         );
-        $this->app->bind(
-            WordsRepoInterface::class,
-            WordsRepo::class
-        );
+
     }
 }

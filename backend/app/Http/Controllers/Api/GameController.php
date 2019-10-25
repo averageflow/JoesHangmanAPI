@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Api\CommonUtils;
+use App\Models\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use App\Repositories\Interfaces\UserWordsRepoInterface;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 /**
@@ -14,7 +16,12 @@ use stdClass;
 
 class GameController extends Controller
 {
+    private $userWordsRepo;
 
+    public function __construct(UserWordsRepoInterface $userWordsRepo)
+    {
+        $this->userWordsRepo = $userWordsRepo;
+    }
     /**
      * Game process evaluation
      *
@@ -23,10 +30,10 @@ class GameController extends Controller
      * @param string $current
      * @param array $blacklist
      * @param string $requestedLetter
-     * @param stdClass $user
+     * @param Users $user
      * @return JsonResponse
      */
-    public function gameEval(int $lives, string $solution, string $current, array $blacklist, string $requestedLetter, stdClass $user): JsonResponse
+    public function gameEval(int $lives, string $solution, string $current, array $blacklist, string $requestedLetter, Users $user): JsonResponse
     {
         $formattedBlacklist =  implode(' ', $blacklist);
 
@@ -35,59 +42,23 @@ class GameController extends Controller
             $dashes = str_split($current);
 
             if (in_array($requestedLetter, $letters)) {
-                //GOOD GUESS
-                $dashes = $this->commonUtils->replaceGuessedLetters($letters, $requestedLetter, $dashes);
+                Log::error("GOOD GUESS");
+                $dashes = $this->userWordsRepo->replaceGuessedLetters($letters, $requestedLetter, $dashes);
 
-                DB::table('users_words')->updateOrInsert(
-                    ['user_id' => $user->id],
-                    ['frontend_word' => $dashes]
-                );
-                if ($dashes == $solution) {
-                    //WON THE GAME
-                    return $this->wonGameResponse($lives, $formattedBlacklist, $dashes);
-                }
-                return response()->json(['successGuessing' => true, 'lives' => $lives, 'currentWord' => $dashes, 'blacklist' => $formattedBlacklist]);
+                return $this->userWordsRepo->goodGuessUpdateDB($user->id, $dashes, $solution, $lives, $formattedBlacklist);
             }
             //BAD GUESS
             $lives--;
             array_push($blacklist, $requestedLetter);
             $formattedBlacklist =  implode(' ', $blacklist);
             if ($lives > 0) {
-                $this->commonUtils->badGuessUpdateDB($user, $lives, $formattedBlacklist);
+                $this->userWordsRepo->badGuessUpdateDB($user->id, $lives, $formattedBlacklist);
 
                 return response()->json(['successGuessing' => false, 'lives' => $lives, 'currentWord' => $current, 'blacklist' => $formattedBlacklist]);
             }
             return $this->lostGameResponse($user, $lives, $formattedBlacklist, $solution);
         }
         return $this->lostGameResponse($user, $lives, $formattedBlacklist, $solution);
-    }
-
-    /**
-     * Update DB and return lost game response
-     *
-     * @param stdClass $user
-     * @param int $lives
-     * @param string $formattedBlacklist
-     * @param string $solution
-     * @return JsonResponse
-     */
-    public function lostGameResponse(stdClass $user, int $lives, string $formattedBlacklist, string $solution): JsonResponse
-    {
-        $this->commonUtils->lostGameUpdateDB($user, $formattedBlacklist, $lives, $solution);
-        return response()->json(['victory' => false, 'lives' => 0, 'successGuessing' => true, 'currentWord' => $solution, 'blacklist' => $formattedBlacklist]);
-    }
-
-    /**
-     * Return won game response
-     *
-     * @param integer $lives
-     * @param string $formattedBlacklist
-     * @param string $dashes
-     * @return JsonResponse
-     */
-    public function wonGameResponse(int $lives, string $formattedBlacklist, string $dashes): JsonResponse
-    {
-        return response()->json(['victory' => true, 'lives' => $lives, 'successGuessing' => true, 'currentWord' => $dashes, 'blacklist' => $formattedBlacklist]);
     }
 
     public function sanitizeRequestedLetter(string $str): string
@@ -106,23 +77,22 @@ class GameController extends Controller
     public function respondToGuess(): JsonResponse
     {
         $requestedLetter = $this->sanitizeRequestedLetter(request('letter'));
+        //Log::error($requestedLetter);
         if ($requestedLetter && request('user')) {
 
-            $user = $this->commonUtils->getUserByEmail(request('user'));
-            $usersWordData = $this->commonUtils->getUserWordData($user);
+            $user = $this->userWordsRepo->getUserByEmail(request('user'));
+            $usersWordData = $this->userWordsRepo->getUserWordData($user->id);
+            Log::error($usersWordData);
 
             $solution = $usersWordData->word;
             $current = $usersWordData->frontend_word;
 
             $lives = intval($usersWordData->lives);
             $blacklist = explode(" ", $usersWordData->blacklist);
-
+            //Log::error([$lives, $solution, $current, $blacklist, $requestedLetter, $user]);
             return $this->gameEval($lives, $solution, $current, $blacklist, $requestedLetter, $user);
         }
     }
 
-    public function __construct()
-    {
-        $this->commonUtils = new CommonUtils();
-    }
+
 }
