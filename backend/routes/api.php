@@ -32,7 +32,7 @@ Route::prefix('v1')->group(function () {
         Route::post('get_score', 'Api\ScoreController@getScore');
         Route::post('set_score', 'Api\ScoreController@setScore');
         Route::post('getUser', 'Api\AuthController@getUser');
-        Route::post('get_user_by_id', 'Api\CommonUtils@getUserByID');
+        Route::post('get_user_by_id', 'Api\AuthController@getUserByID');
 
     });
 });

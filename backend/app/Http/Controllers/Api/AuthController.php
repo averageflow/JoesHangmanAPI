@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Users;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
@@ -65,5 +66,17 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         return response()->json(['success' => $user], $this->successStatus);
+    }
+
+    /**
+     * Return user details when ID is provided
+     *
+     * @param string $id
+     * @return JsonResponse
+     */
+    public function getUserByID(string $id): JsonResponse
+    {
+        $userDetails = (array) Users::where('id', '=', $id)->first();
+        return response()->json($userDetails);
     }
 }
