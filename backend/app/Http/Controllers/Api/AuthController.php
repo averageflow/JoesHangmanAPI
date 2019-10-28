@@ -9,19 +9,21 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use Validator;
+
 /**
  * Controls authentication mechanisms
  */
 class AuthController extends Controller
 {
     public $successStatus = 200;
+
     /**
      * Register user in application
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function register(Request $request):JsonResponse
+    public function register(Request $request): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),
@@ -38,7 +40,7 @@ class AuthController extends Controller
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
-        $success['token'] =  $user->createToken('AppName')->accessToken;
+        $success['token'] = $user->createToken('AppName')->accessToken;
         return response()->json(['success' => $success], $this->successStatus);
     }
 
@@ -47,22 +49,23 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function login():JsonResponse
+    public function login(): JsonResponse
     {
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
             $user = Auth::user();
-            $success['token'] =  $user->createToken('AppName')->accessToken;
+            $success['token'] = $user->createToken('AppName')->accessToken;
             return response()->json(['success' => $success], $this->successStatus);
         } else {
             return response()->json(['error' => 'Unauthorised'], 401);
         }
     }
+
     /**
      * Get the user token
      *
      * @return JsonResponse
      */
-    public function getUser():JsonResponse
+    public function getUser(): JsonResponse
     {
         $user = Auth::user();
         return response()->json(['success' => $user], $this->successStatus);
@@ -76,7 +79,7 @@ class AuthController extends Controller
      */
     public function getUserByID(string $id): JsonResponse
     {
-        $userDetails = (array) Users::where('id', '=', $id)->first();
+        $userDetails = (array)Users::where('id', '=', $id)->first();
         return response()->json($userDetails);
     }
 }

@@ -6,8 +6,6 @@ use App\Models\UserWords;
 use App\Models\Users;
 
 use App\Repositories\Interfaces\UserWordsRepoInterface;
-use App\Repositories\WordsRepo;
-use App\Repositories\UsersRepo;
 use Illuminate\Http\JsonResponse;
 
 class UserWordsRepo implements UserWordsRepoInterface
@@ -15,7 +13,8 @@ class UserWordsRepo implements UserWordsRepoInterface
     protected $wordsRepo;
     protected $usersRepo;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->wordsRepo = new WordsRepo();
         $this->usersRepo = new UsersRepo();
     }
@@ -23,6 +22,7 @@ class UserWordsRepo implements UserWordsRepoInterface
     /**
      * Get current DB data for user's word
      *
+     * @param string $user
      * @return JsonResponse
      */
     public function getCurrentWord(string $user): JsonResponse
@@ -54,15 +54,30 @@ class UserWordsRepo implements UserWordsRepoInterface
         $this->renewUserWords($userID, $words, 12);
         return response()->json(['word' => $words["enigma"], 'lives' => 12]);
 
-        return response()->json(['error' => 'There was an error fetching a new word!']);
+        //  return response()->json(['error' => 'There was an error fetching a new word!']);
     }
 
+    /**
+     * Renew DB data for user's word
+     *
+     * @param string $id
+     * @param array $words
+     * @param int $lives
+     * @return void
+     */
+    public function renewUserWords(string $id, array $words, int $lives): void
+    {
+        UserWords::updateOrInsert(
+            ['user_id' => $id],
+            ['word' => $words["solution"], 'frontend_word' => $words["enigma"], 'lives' => $lives, 'blacklist' => '']
+        );
+    }
 
     /**
      * Get user word data for the game
      *
      * @param string $id
-     * @return stdClass
+     * @return UserWords
      */
     public function getUserWordData(string $id): UserWords
     {
@@ -89,38 +104,6 @@ class UserWordsRepo implements UserWordsRepoInterface
     }
 
     /**
-     * Renew DB data for user's word
-     *
-     * @param string $id
-     * @param array $words
-     * @param int $lives
-     * @return void
-     */
-    public function renewUserWords(string $id, array $words, int $lives): void
-    {
-        UserWords::updateOrInsert(
-            ['user_id' => $id],
-            ['word' => $words["solution"], 'frontend_word' => $words["enigma"], 'lives' => $lives, 'blacklist' => '']
-        );
-    }
-
-    /**
-     * Renew DB data for user's word
-     *
-     * @param string $id
-     * @param array $words
-     * @param int $lives
-     * @return void
-     */
-    public function lostGameUpdateDB(string $id, string $formattedBlacklist, int $lives, string $solution): void
-    {
-        UserWords::updateOrInsert(
-            ['user_id' => $id],
-            ['lives' => $lives, 'blacklist' => $formattedBlacklist, 'frontend_word' => $solution]
-        );
-    }
-
-    /**
      * Update lives and blacklist on bad guess
      *
      * @param string $id
@@ -136,7 +119,8 @@ class UserWordsRepo implements UserWordsRepoInterface
         );
     }
 
-    public function goodGuessUpdateDB(string $id, string $dashes, string $solution, int $lives, string $formattedBlacklist){
+    public function goodGuessUpdateDB(string $id, string $dashes, string $solution, int $lives, string $formattedBlacklist)
+    {
         UserWords::updateOrInsert(
             ['user_id' => $id],
             ['frontend_word' => $dashes]
@@ -147,7 +131,8 @@ class UserWordsRepo implements UserWordsRepoInterface
         }
         return response()->json(['successGuessing' => true, 'lives' => $lives, 'currentWord' => $dashes, 'blacklist' => $formattedBlacklist]);
     }
-     /**
+
+    /**
      * Return won game response
      *
      * @param integer $lives
@@ -159,10 +144,11 @@ class UserWordsRepo implements UserWordsRepoInterface
     {
         return response()->json(['victory' => true, 'lives' => $lives, 'successGuessing' => true, 'currentWord' => $dashes, 'blacklist' => $formattedBlacklist]);
     }
+
     /**
      * Update DB and return lost game response
      *
-     * @param stdClass $user
+     * @param Users $user
      * @param int $lives
      * @param string $formattedBlacklist
      * @param string $solution
@@ -172,5 +158,22 @@ class UserWordsRepo implements UserWordsRepoInterface
     {
         $this->lostGameUpdateDB($user->id, $formattedBlacklist, $lives, $solution);
         return response()->json(['victory' => false, 'lives' => 0, 'successGuessing' => true, 'currentWord' => $solution, 'blacklist' => $formattedBlacklist]);
+    }
+
+    /**
+     * Renew DB data for user's word
+     *
+     * @param string $id
+     * @param string $formattedBlacklist
+     * @param int $lives
+     * @param string $solution
+     * @return void
+     */
+    public function lostGameUpdateDB(string $id, string $formattedBlacklist, int $lives, string $solution): void
+    {
+        UserWords::updateOrInsert(
+            ['user_id' => $id],
+            ['lives' => $lives, 'blacklist' => $formattedBlacklist, 'frontend_word' => $solution]
+        );
     }
 }

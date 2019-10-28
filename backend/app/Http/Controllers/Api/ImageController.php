@@ -14,6 +14,7 @@ class ImageController extends Controller
     /**
      * Get Base64 image of corresponding hangman according to lives
      *
+     * @param null $lives
      * @return JsonResponse
      */
     public function getHangman($lives = null): JsonResponse

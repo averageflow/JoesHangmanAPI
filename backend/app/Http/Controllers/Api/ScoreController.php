@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Repositories\Interfaces\UserScoresRepoInterface;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Controls the get and set methods of the score
@@ -26,7 +25,7 @@ class ScoreController extends Controller
      */
     public function getScore(): JsonResponse
     {
-        if (request('user')!= null) {
+        if (request('user') != null) {
             return $this->userScoresRepo->getScore(request('user'));
         }
         return response()->json(["error" => "Could not get score!"]);

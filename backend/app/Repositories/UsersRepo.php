@@ -13,7 +13,7 @@ class UsersRepo implements UsersRepoInterface
      * Get user Collection by email
      *
      * @param string $email
-     * @return stdClass
+     * @return Users
      */
     public function getUserByEmail(string $email): Users
     {
@@ -28,7 +28,7 @@ class UsersRepo implements UsersRepoInterface
      */
     public function getUserByID(string $id): JsonResponse
     {
-        $userDetails = (array) Users::where('id', '=', $id)->first();
+        $userDetails = (array)Users::where('id', '=', $id)->first();
         return response()->json($userDetails);
     }
 }
