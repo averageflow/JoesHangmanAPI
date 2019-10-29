@@ -16,13 +16,13 @@ const routes = [
     path: "/",
     name: "game",
     component: Game,
-    props: { authenticated: new Boolean(VueCookies.get("authenticated")) }
+    props: { authenticated: Boolean(VueCookies.get("authenticated")) }
   },
   {
     path: "/insert_word",
     name: "insert_word",
     component: InsertWord,
-    props: { authenticated: new Boolean(VueCookies.get("authenticated")) }
+    props: { authenticated: Boolean(VueCookies.get("authenticated")) }
   }
 ];
 

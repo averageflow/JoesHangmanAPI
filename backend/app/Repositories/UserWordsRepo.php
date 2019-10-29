@@ -29,13 +29,15 @@ class UserWordsRepo implements UserWordsRepoInterface
     {
 
         $userID = $this->usersRepo->getUserByEmail($user)->id;
-        $userWordData = UserWords::where('user_id', '=', $userID)->first();
-        if (!$userWordData) {
+
+        $currentWord = UserWords::getFrontendWord($userID);
+        $lives = UserWords::getLives($userID);
+        $blacklist = UserWords::getBlacklist($userID);
+
+        if (!$currentWord || !$lives || !$blacklist) {
             return response()->json(['status' => 'No records available!']);
         }
-        $currentWord = $userWordData->frontend_word;
-        $lives = $userWordData->lives;
-        $blacklist = $userWordData->blacklist;
+
         return response()->json(['word' => $currentWord, 'lives' => $lives, 'blacklist' => $blacklist]);
     }
 
@@ -67,10 +69,7 @@ class UserWordsRepo implements UserWordsRepoInterface
      */
     public function renewUserWords(string $id, array $words, int $lives): void
     {
-        UserWords::updateOrInsert(
-            ['user_id' => $id],
-            ['word' => $words["solution"], 'frontend_word' => $words["enigma"], 'lives' => $lives, 'blacklist' => '']
-        );
+        UserWords::renewUserWords($id, $words, $lives);
     }
 
     /**
@@ -81,7 +80,7 @@ class UserWordsRepo implements UserWordsRepoInterface
      */
     public function getUserWordData(string $id): UserWords
     {
-        return UserWords::where('user_id', '=', $id)->first();
+        return UserWords::getUserWordData($id);
     }
 
     /**
@@ -113,7 +112,7 @@ class UserWordsRepo implements UserWordsRepoInterface
      */
     public function badGuessUpdateDB(string $id, int $lives, string $formattedBlacklist): void
     {
-        UserWords::updateOrInsert(
+        (new UserWords)->updateOrInsert(
             ['user_id' => $id],
             ['lives' => $lives, 'blacklist' => $formattedBlacklist]
         );
@@ -121,7 +120,7 @@ class UserWordsRepo implements UserWordsRepoInterface
 
     public function goodGuessUpdateDB(string $id, string $dashes, string $solution, int $lives, string $formattedBlacklist)
     {
-        UserWords::updateOrInsert(
+        (new UserWords)->updateOrInsert(
             ['user_id' => $id],
             ['frontend_word' => $dashes]
         );
@@ -129,7 +128,12 @@ class UserWordsRepo implements UserWordsRepoInterface
             //WON THE GAME
             return $this->wonGameResponse($lives, $formattedBlacklist, $dashes);
         }
-        return response()->json(['successGuessing' => true, 'lives' => $lives, 'currentWord' => $dashes, 'blacklist' => $formattedBlacklist]);
+        return response()->json([
+            'successGuessing' => true,
+            'lives' => $lives,
+            'currentWord' => $dashes,
+            'blacklist' => $formattedBlacklist
+        ]);
     }
 
     /**
@@ -142,7 +146,13 @@ class UserWordsRepo implements UserWordsRepoInterface
      */
     public function wonGameResponse(int $lives, string $formattedBlacklist, string $dashes): JsonResponse
     {
-        return response()->json(['victory' => true, 'lives' => $lives, 'successGuessing' => true, 'currentWord' => $dashes, 'blacklist' => $formattedBlacklist]);
+        return response()->json([
+            'victory' => true,
+            'lives' => $lives,
+            'successGuessing' => true,
+            'currentWord' => $dashes,
+            'blacklist' => $formattedBlacklist
+        ]);
     }
 
     /**
@@ -157,7 +167,13 @@ class UserWordsRepo implements UserWordsRepoInterface
     public function lostGameResponse(Users $user, int $lives, string $formattedBlacklist, string $solution): JsonResponse
     {
         $this->lostGameUpdateDB($user->id, $formattedBlacklist, $lives, $solution);
-        return response()->json(['victory' => false, 'lives' => 0, 'successGuessing' => true, 'currentWord' => $solution, 'blacklist' => $formattedBlacklist]);
+        return response()->json([
+            'victory' => false,
+            'lives' => 0,
+            'successGuessing' => true,
+            'currentWord' => $solution,
+            'blacklist' => $formattedBlacklist
+        ]);
     }
 
     /**
@@ -171,9 +187,33 @@ class UserWordsRepo implements UserWordsRepoInterface
      */
     public function lostGameUpdateDB(string $id, string $formattedBlacklist, int $lives, string $solution): void
     {
-        UserWords::updateOrInsert(
+        (new UserWords)->updateOrInsert(
             ['user_id' => $id],
-            ['lives' => $lives, 'blacklist' => $formattedBlacklist, 'frontend_word' => $solution]
+            [
+                'lives' => $lives,
+                'blacklist' => $formattedBlacklist,
+                'frontend_word' => $solution
+            ]
         );
+    }
+
+    public function getSolution($id)
+    {
+        return UserWords::getSolution($id);
+    }
+
+    public function getFrontEndWord($id)
+    {
+        return UserWords::getFrontendWord($id);
+    }
+
+    public function getLives($id)
+    {
+        return intval(UserWords::getLives($id));
+    }
+
+    public function getBlacklist($id)
+    {
+        return UserWords::getBlacklist($id);
     }
 }

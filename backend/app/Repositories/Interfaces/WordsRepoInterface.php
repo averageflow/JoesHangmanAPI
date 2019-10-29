@@ -9,7 +9,5 @@ interface WordsRepoInterface
 
     public function getUserLang(string $user);
 
-    public function transformToFrontEndWord(string $letter);
-
     public function fetchNewFrontEndWord(string $user);
 }

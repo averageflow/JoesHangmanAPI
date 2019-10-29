@@ -19,6 +19,9 @@ class WordController extends Controller
     }
 
 
+    /**
+     * @return JsonResponse
+     */
     public function getCurrentWord(): JsonResponse
     {
         if (request('newWord') == false && request('user')) {
@@ -27,6 +30,9 @@ class WordController extends Controller
         return response()->json(['error' => "There was an error fetching user's word!"]);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function insertNewWord(): JsonResponse
     {
         if (request('word') && request('language')) {
@@ -35,6 +41,9 @@ class WordController extends Controller
         return response()->json(['error' => 'There was an error inserting a new word!']);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function getRandomWord(): JsonResponse
     {
         if (request('newWord') == true && request('user')) {

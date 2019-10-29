@@ -95,8 +95,8 @@ export default {
   created() {
     this.$vuetify.theme.dark = true;
     this.$cookies.config("30d");
-    this.currentStatus = new Boolean(this.$cookies.get("authenticated"));
-    this.currentUser = new String(this.$cookies.get("currentUser"));
+    this.currentStatus = Boolean(this.$cookies.get("authenticated"));
+    this.currentUser = String(this.$cookies.get("currentUser"));
     let lang = this.$cookies.get("language");
     if (lang) {
       this.$i18n.locale = lang;

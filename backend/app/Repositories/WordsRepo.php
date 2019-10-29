@@ -26,7 +26,7 @@ class WordsRepo implements WordsRepoInterface
      */
     public function insertNewWord(string $word, string $language): JsonResponse
     {
-        Words::insert(['word' => $word, 'language' => $language]);
+        Words::insertNewWord($word, $language);
         return response()->json(['success' => true]);
     }
 
@@ -39,8 +39,7 @@ class WordsRepo implements WordsRepoInterface
     public function fetchNewFrontEndWord(string $user): array
     {
         $userLang = $this->getUserLang($user);
-        $randomWord = Words::select('word')->where('language', '=', $userLang)->inRandomOrder()->first()->word;
-
+        $randomWord = Words::retrieveRandomWord($userLang);
         $frontEndWord = "";
 
         for ($i = 0; $i < strlen($randomWord); $i++) {
@@ -58,7 +57,7 @@ class WordsRepo implements WordsRepoInterface
     public function getUserLang(string $user): string
     {
         $userID = $this->usersRepo->getUserByEmail($user)->id;
-        return UserWords::select('prefered_language')->where('user_id', '=', $userID)->first()->prefered_language;
+        return UserWords::getPreferredLanguage($userID);
     }
 
     /**
@@ -67,7 +66,7 @@ class WordsRepo implements WordsRepoInterface
      * @param string $letter
      * @return string
      */
-    public function transformToFrontEndWord(string $letter): string
+    public static function transformToFrontEndWord(string $letter): string
     {
         if ($letter == "-") {
             return "-";
@@ -77,4 +76,6 @@ class WordsRepo implements WordsRepoInterface
         }
         return "_";
     }
+
+
 }

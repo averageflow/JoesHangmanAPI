@@ -27,9 +27,9 @@ class UserScoresRepo implements UserScoresRepoInterface
     {
         $user = $this->usersRepo->getUserByEmail($user);
 
-        $score = UserScores::where('id', '=', $user->id)->first();
+        $score = UserScores::getUserScore($user->id);
         if ($score) {
-            return response()->json(["wins" => $score->wins, "losses" => $score->losses]);
+            return response()->json($score);
         }
         return response()->json(["error" => "Could not get score!"]);
     }
@@ -65,19 +65,19 @@ class UserScoresRepo implements UserScoresRepoInterface
      */
     public function increaseWins(Users $user): void
     {
-        $wins = UserScores::where('id', '=', $user->id)->first()->wins;
-        UserScores::updateOrInsert(['id' => $user->id], ['wins' => $wins + 1]);
+        $wins = UserScores::getWinsByID($user->id);
+        UserScores::updateUserWins($user->id, $wins + 1);
     }
 
     /**
      * Increase user's losses
      *
-     * @param stdClass $user
+     * @param Users $user
      * @return void
      */
     public function increaseLosses(Users $user): void
     {
-        $losses = UserScores::where('id', '=', $user->id)->first()->losses;
-        UserScores::updateOrInsert(['id' => $user->id], ['losses' => $losses + 1]);
+        $losses = UserScores::getLossesByID($user->id);
+        UserScores::updateUserLosses($user->id, $losses + 1);
     }
 }

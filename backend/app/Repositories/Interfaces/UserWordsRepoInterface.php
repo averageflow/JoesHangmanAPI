@@ -26,4 +26,12 @@ interface UserWordsRepoInterface
 
     public function lostGameResponse(Users $user, int $lives, string $formattedBlacklist, string $solution);
 
+    public function getSolution($id);
+
+    public function getLives($id);
+
+    public function getFrontEndWord($id);
+
+    public function getBlacklist($id);
+
 }

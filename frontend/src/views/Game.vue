@@ -7,14 +7,14 @@
             <v-btn color="secondary">{{ $t("lives") }} {{ this.lives }}</v-btn>
             <v-spacer></v-spacer>
             <v-btn color="secondary" @click="getRandomWord()">
-              {{
-              $t("new_word")
-              }}
+              {{ $t("new_word") }}
             </v-btn>
           </v-toolbar>
           <v-card-text style="text-align:center;">
-            <h3 style="color:red;letter-spacing:0.6em;">{{ this.blacklist }}</h3>
-            <img width="50%" v-bind:src="hangmanImage" />
+            <h3 style="color:red;letter-spacing:0.6em;">
+              {{ this.blacklist }}
+            </h3>
+            <img width="50%" v-bind:src="hangmanImage" alt="Hangman Image" />
             <h3 style="letter-spacing:0.6em;">{{ this.currentWord }}</h3>
           </v-card-text>
           <v-card-actions>
@@ -30,33 +30,23 @@
               </v-col>
               <v-col cols="12" md="6" sm="12">
                 <v-btn color="primary" @click="guessLetter()">
-                  {{
-                  $t("submit")
-                  }}
+                  {{ $t("submit") }}
                 </v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
         </v-card>
-        <v-alert v-if="victory == true" type="success">
-          {{
-          $t("victory_message")
-          }}
+        <v-alert v-if="victory === true" type="success">
+          {{ $t("victory_message") }}
         </v-alert>
-        <v-alert v-if="victory == false" type="error">
-          {{
-          $t("lost_message")
-          }}
+        <v-alert v-if="victory === false" type="error">
+          {{ $t("lost_message") }}
         </v-alert>
-        <v-alert v-if="letterError == true" type="error">
-          {{
-          $t("blacklist_letter_message")
-          }}
+        <v-alert v-if="letterError === true" type="error">
+          {{ $t("blacklist_letter_message") }}
         </v-alert>
-        <v-alert v-if="netError == true" type="error">
-          {{
-          $t("network_error")
-          }}
+        <v-alert v-if="netError === true" type="error">
+          {{ $t("network_error") }}
         </v-alert>
       </v-col>
     </v-row>
@@ -70,11 +60,11 @@ export default {
   name: "Game",
 
   created() {
-    this.currentStatus = new Boolean(this.$cookies.get("authenticated"));
-    this.currentUser = new String(this.$cookies.get("currentUser"));
-    this.myToken = new String(this.$cookies.get("token"));
+    this.currentStatus = Boolean(this.$cookies.get("authenticated"));
+    this.currentUser = String(this.$cookies.get("currentUser"));
+    this.myToken = String(this.$cookies.get("token"));
 
-    if (this.currentStatus == true) {
+    if (this.currentStatus === true) {
       this.getCurrentWord();
       this.getUserScore();
     } else {
@@ -113,7 +103,7 @@ export default {
         });
     },
     guessLetter() {
-      if (!this.desiredLetter || this.desiredLetter == " ") {
+      if (!this.desiredLetter || this.desiredLetter === " ") {
         return;
       }
       if (this.blacklist != null) {
@@ -140,7 +130,7 @@ export default {
           if (res.data["victory"] != null) {
             this.victory = res.data["victory"];
 
-            if (this.victory == true) {
+            if (this.victory === true) {
               this.setUserScore("won");
               this.getUserScore();
             } else {
@@ -222,7 +212,7 @@ export default {
             this.lives = res.data["lives"];
             this.blacklist = res.data["blacklist"];
             this.getHangmanImage();
-          } else if (res.data["status"] == "No records available!") {
+          } else if (res.data["status"] === "No records available!") {
             this.getRandomWord();
           } else if (res.data["error"]) {
             alert(res.data["error"]);

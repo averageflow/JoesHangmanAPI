@@ -8,32 +8,42 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field v-model="name" :label="$t('name')" type="text"></v-text-field>
-              <v-text-field v-model="email" :label="$t('email')" type="text"></v-text-field>
-              <v-text-field v-model="password" :label="$t('password')" type="password"></v-text-field>
-              <v-text-field v-model="c_password" :label="$t('confirm_password')" type="password"></v-text-field>
+              <v-text-field
+                v-model="name"
+                :label="$t('name')"
+                type="text"
+              ></v-text-field>
+              <v-text-field
+                v-model="email"
+                :label="$t('email')"
+                type="text"
+              ></v-text-field>
+              <v-text-field
+                v-model="password"
+                :label="$t('password')"
+                type="password"
+              ></v-text-field>
+              <v-text-field
+                v-model="c_password"
+                :label="$t('confirm_password')"
+                type="password"
+              ></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" @click="registerUser()">
-              {{
-              $t("register")
-              }}
+              {{ $t("register") }}
             </v-btn>
           </v-card-actions>
         </v-card>
         <br />
         <v-alert v-if="netError" type="warning">
-          {{
-          $t("error_connecting")
-          }}
+          {{ $t("error_connecting") }}
         </v-alert>
         <br />
         <v-alert v-if="passError" type="warning">
-          {{
-          $t("password_error")
-          }}
+          {{ $t("password_error") }}
         </v-alert>
       </v-col>
     </v-row>
@@ -58,7 +68,7 @@ export default {
   methods: {
     registerUser() {
       if (this.password === this.c_password && this.password !== "") {
-        var postData = {
+        const postData = {
           name: this.name,
           email: this.email,
           password: this.password,

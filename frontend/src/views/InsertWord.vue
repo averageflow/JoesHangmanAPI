@@ -15,23 +15,17 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" @click="insertNewWord()">
-              {{
-              $t("insert")
-              }}
+              {{$t("insert")}}
             </v-btn>
           </v-card-actions>
         </v-card>
         <br />
-        <v-alert v-if="successInserting == true" type="success">
-          {{
-          $t("success_inserting")
-          }}
+        <v-alert v-if="successInserting === true" type="success">
+          {{ $t("success_inserting") }}
         </v-alert>
         <br />
-        <v-alert v-if="netError == true" type="error">
-          {{
-          $t("network_error")
-          }}
+        <v-alert v-if="netError === true" type="error">
+          {{ $t("network_error") }}
         </v-alert>
       </v-col>
     </v-row>
@@ -56,10 +50,10 @@ export default {
     currentUser: null
   }),
   mounted() {
-    this.currentStatus = new Boolean(this.$cookies.get("authenticated"));
-    this.currentUser = new String(this.$cookies.get("currentUser"));
+    this.currentStatus = Boolean(this.$cookies.get("authenticated"));
+    this.currentUser = String(this.$cookies.get("currentUser"));
 
-    if (this.currentStatus == true) {
+    if (this.currentStatus === true) {
       //pass;
     } else {
       router.push({ name: "login" });

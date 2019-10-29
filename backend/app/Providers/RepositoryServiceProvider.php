@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\GameRepo;
+use App\Repositories\Interfaces\GameRepoInterface;
 use App\Repositories\UserScoresRepo;
 use App\Repositories\Interfaces\UserScoresRepoInterface;
 use App\Repositories\UserWordsRepo;
@@ -31,6 +33,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             WordsRepoInterface::class,
             WordsRepo::class
+        );
+        $this->app->bind(
+            GameRepoInterface::class,
+            GameRepo::class
         );
 
     }

@@ -17,7 +17,7 @@ class UsersRepo implements UsersRepoInterface
      */
     public function getUserByEmail(string $email): Users
     {
-        return Users::where('email', '=', $email)->first();
+        return Users::getUserByEmail($email);
     }
 
     /**
@@ -28,7 +28,7 @@ class UsersRepo implements UsersRepoInterface
      */
     public function getUserByID(string $id): JsonResponse
     {
-        $userDetails = (array)Users::where('id', '=', $id)->first();
+        $userDetails = Users::getUserByID($id);
         return response()->json($userDetails);
     }
 }

@@ -28,17 +28,13 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" @click="performLogin()">
-              {{
-              $t("login")
-              }}
+              {{ $t("login") }}
             </v-btn>
           </v-card-actions>
         </v-card>
         <br />
-        <v-alert v-if="justCreated == true" type="success">
-          {{
-          t("login_new_account")
-          }}
+        <v-alert v-if="justCreated === true" type="success">
+          {{ t("login_new_account") }}
         </v-alert>
         <v-alert v-else type="info">{{ $t("login_tip") }}</v-alert>
       </v-col>
@@ -81,7 +77,7 @@ export default {
       this.$cookies.set("language", this.locales[this.chosenLanguage]);
     },
     performLogin() {
-      var postData = {
+      const postData = {
         email: this.login,
         password: this.password
       };
