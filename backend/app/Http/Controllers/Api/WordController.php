@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
 use App\Repositories\Interfaces\UserWordRepoInterface;
 use App\Repositories\Interfaces\WordRepoInterface;
+use Illuminate\Http\JsonResponse;
 
 class WordController extends Controller
 {

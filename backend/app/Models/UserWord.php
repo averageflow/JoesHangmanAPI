@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Model describing the users words table in DB
@@ -54,7 +53,7 @@ class UserWord extends Model
      * @param int $userID
      * @return string
      */
-    public static function getBlacklist(int $userID):string
+    public static function getBlacklist(int $userID): string
     {
         return (new UserWord)->select('blacklist')
             ->where('user_id', '=', $userID)
@@ -65,7 +64,7 @@ class UserWord extends Model
      * @param int $userID
      * @return string
      */
-    public static function getPreferredLanguage(int $userID):string
+    public static function getPreferredLanguage(int $userID): string
     {
         return (new UserWord)->select('prefered_language')
             ->where('user_id', '=', $userID)

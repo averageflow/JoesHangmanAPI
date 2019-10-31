@@ -4,14 +4,14 @@ namespace App\Providers;
 
 use App\Repositories\GameRepo;
 use App\Repositories\Interfaces\GameRepoInterface;
-use App\Repositories\MyUserScoreRepo;
-use App\Repositories\Interfaces\MyUserScoreRepoInterface;
-use App\Repositories\UserWordRepo;
-use App\Repositories\Interfaces\UserWordRepoInterface;
-use App\Repositories\WordRepo;
 use App\Repositories\Interfaces\MyUserRepoInterface;
-use App\Repositories\MyUserRepo;
+use App\Repositories\Interfaces\MyUserScoreRepoInterface;
+use App\Repositories\Interfaces\UserWordRepoInterface;
 use App\Repositories\Interfaces\WordRepoInterface;
+use App\Repositories\MyUserRepo;
+use App\Repositories\MyUserScoreRepo;
+use App\Repositories\UserWordRepo;
+use App\Repositories\WordRepo;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider

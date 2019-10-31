@@ -5,8 +5,6 @@ namespace App\Repositories;
 use App\Models\MyUser;
 use App\Repositories\Interfaces\MyUserRepoInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 
 class MyUserRepo implements MyUserRepoInterface
@@ -15,7 +13,7 @@ class MyUserRepo implements MyUserRepoInterface
      * Get user Collection by email
      *
      * @param string $email
-     * @return Collection
+     * @return MyUser
      */
     public function getUserByEmail(string $email): MyUser
     {

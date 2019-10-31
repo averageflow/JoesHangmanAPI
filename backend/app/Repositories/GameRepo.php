@@ -6,7 +6,6 @@ namespace App\Repositories;
 use App\Models\MyUser;
 use App\Repositories\Interfaces\GameRepoInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 
 class GameRepo implements GameRepoInterface

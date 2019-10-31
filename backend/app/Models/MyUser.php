@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Model describing the words table in DB
@@ -19,7 +17,7 @@ class MyUser extends Model
 
     /**
      * @param string $email
-     * @return Collection
+     * @return MyUser
      */
     public static function getUserByEmail(string $email): MyUser
     {

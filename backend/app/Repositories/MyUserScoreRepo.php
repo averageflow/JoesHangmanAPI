@@ -2,9 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Models\MyUserScore;
 use App\Models\MyUser;
-
+use App\Models\MyUserScore;
 use App\Repositories\Interfaces\MyUserScoreRepoInterface;
 use Illuminate\Http\JsonResponse;
 

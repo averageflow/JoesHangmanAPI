@@ -11,10 +11,9 @@ function getKeyByValue(object, value) {
   return Object.keys(object).find(key => object[key] === value);
 }
 function getArrayOfValues(dictionary) {
-  const values = Object.keys(dictionary).map(function(key) {
+  return Object.keys(dictionary).map(function (key) {
     return dictionary[key];
   });
-  return values;
 }
 
 Vue.use(VueI18n);

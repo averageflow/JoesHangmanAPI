@@ -5,7 +5,6 @@ namespace App\Repositories\Interfaces;
 
 use App\Models\MyUser;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 interface MyUserRepoInterface
 {

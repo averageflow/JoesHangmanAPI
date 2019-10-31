@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Models\Word;
 use App\Models\UserWord;
+use App\Models\Word;
 use App\Repositories\Interfaces\WordRepoInterface;
 use Illuminate\Http\JsonResponse;
 

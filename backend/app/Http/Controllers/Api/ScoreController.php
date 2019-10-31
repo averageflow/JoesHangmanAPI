@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
 use App\Repositories\Interfaces\MyUserScoreRepoInterface;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Controls the get and set methods of the score

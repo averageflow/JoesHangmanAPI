@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\MyUser;
 use App\User;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
-use Validator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Controls authentication mechanisms
@@ -71,15 +70,5 @@ class AuthController extends Controller
         return response()->json(['success' => $user], $this->successStatus);
     }
 
-    /**
-     * Return user details when ID is provided
-     *
-     * @param string $id
-     * @return JsonResponse
-     */
-    public function getUserByID(string $id): JsonResponse
-    {
-        $userDetails = (array)MyUser::where('id', '=', $id)->first();
-        return response()->json($userDetails);
-    }
+
 }

@@ -2,9 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Models\UserWord;
 use App\Models\MyUser;
-
+use App\Models\UserWord;
 use App\Repositories\Interfaces\UserWordRepoInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
