@@ -8,7 +8,11 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field :label="$t('login')" v-model="login" type="text"></v-text-field>
+              <v-text-field
+                :label="$t('login')"
+                v-model="login"
+                type="text"
+              ></v-text-field>
 
               <v-text-field
                 id="password"
@@ -44,7 +48,6 @@
 
 <script>
 import router from "../router";
-
 
 export default {
   name: "LoginForm",

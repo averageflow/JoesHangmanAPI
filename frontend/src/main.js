@@ -21,6 +21,17 @@ Vue.prototype.$http = axios;
 const myLocales = { en: "English", nl: "Nederlands", ca: "Català", pt: "Português" };
 Vue.prototype.$myLocales = myLocales;
 Vue.prototype.$myLanguages = getArrayOfValues(myLocales);
+Vue.prototype.$myColors = [
+  "#C62828",
+  "#AD1457",
+  "#6A1B9A",
+  "#283593",
+  "#1565C0",
+  "#00796B",
+  "#388E3C",
+  "#558B2F",
+  "#FF8F00"
+];
 
 Vue.prototype.$getKeyByValue = getKeyByValue;
 Vue.prototype.$getArrayOfValues = getArrayOfValues;

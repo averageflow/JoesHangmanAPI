@@ -35,9 +35,6 @@
 <script>
 import router from "../router";
 
-
-
-
 export default {
   name: "InsertWord",
   props: {
@@ -51,7 +48,7 @@ export default {
     netError: null,
     successInserting: null,
     currentStatus: null,
-    currentUser: null
+    currentUser: null,
   }),
   mounted() {
     this.currentStatus = Boolean(this.$cookies.get("authenticated"));
@@ -68,8 +65,8 @@ export default {
 
   methods: {
     insertNewWord() {
-      if (this.password === this.c_password && this.password !== "") {
-        var postData = {
+      if (this.word !== null && this.word !== "") {
+        const postData = {
           word: this.word.toUpperCase(),
           language: this.locales[this.chosenLanguage]
         };
@@ -88,7 +85,7 @@ export default {
             this.netError = true;
           });
       } else {
-        this.passError = true;
+        this.netError = true;
       }
     }
   }

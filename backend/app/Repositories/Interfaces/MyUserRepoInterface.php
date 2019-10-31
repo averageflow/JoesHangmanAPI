@@ -10,5 +10,5 @@ interface MyUserRepoInterface
 {
     public function getUserByEmail(string $email): MyUser;
 
-    public function getUserByID(int $id): JsonResponse;
+    public function getUserByID(int $userID): JsonResponse;
 }

@@ -18,7 +18,7 @@
             <v-list-item-title>{{ $t("login") }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item @click="goToRegister()">
+        <v-list-item @click.stop="goToRegister()">
           <v-list-item-action>
             <v-icon>mdi-account-heart</v-icon>
           </v-list-item-action>
@@ -26,7 +26,7 @@
             <v-list-item-title>{{ $t("register") }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item @click="goToInsertWord()">
+        <v-list-item @click.stop="goToInsertWord()">
           <v-list-item-action>
             <v-icon>mdi-currency-twd</v-icon>
           </v-list-item-action>
@@ -40,6 +40,31 @@
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>{{ $t("joes_hangman") }}</v-toolbar-title>
+      <v-spacer></v-spacer>
+
+      <v-btn icon @click.stop="switchMode()">
+        <v-icon>mdi-lightbulb-on-outline</v-icon>
+      </v-btn>
+      <v-menu bottom left>
+        <template v-slot:activator="{ on }">
+          <v-btn
+                  icon
+                  v-on="on"
+          >
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item
+                  v-for="(item, i) in myColors"
+                  :key="i"
+
+          >
+            <v-list-item-title>{{ item }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
     <v-content>
@@ -58,7 +83,7 @@
     <v-footer app>
       <span>
         &copy; 2019 JJBA -
-        <span v-if="currentStatus == true">
+        <span v-if="currentStatus === true">
           {{ $t("logged_as") }}{{ this.currentUser }}&nbsp;|&nbsp;
           <span
             >{{ $t("wins") }}: {{ this.wins }} | {{ $t("losses") }}:
@@ -89,11 +114,12 @@ export default {
     currentUser: null,
     word: null,
     wins: 0,
-    losses: 0
+    losses: 0,
+    myColors: []
   }),
 
   created() {
-    this.$vuetify.theme.dark = true;
+
     this.$cookies.config("30d");
     this.currentStatus = Boolean(this.$cookies.get("authenticated"));
     this.currentUser = String(this.$cookies.get("currentUser"));
@@ -104,6 +130,9 @@ export default {
       this.$i18n.locale = "en";
       this.$cookies.set("language", "en");
     }
+    const mode = this.$cookies.get("mode");
+    this.enableMode(mode);
+    this.myColors = this.$myColors;
   },
   methods: {
     goToGame() {
@@ -135,6 +164,33 @@ export default {
     },
     setLosses(losses) {
       this.losses = losses;
+    },
+    enableMode(mode) {
+      if (mode) {
+        this.$cookies.set("mode", mode);
+        this.$vuetify.theme.dark = mode !== "light";
+      } else {
+        this.$cookies.set("mode", "dark");
+        this.$vuetify.theme.dark = true;
+      }
+    },
+    switchMode() {
+      const mode = this.$cookies.get("mode");
+
+      if (mode === "dark") {
+        this.$vuetify.theme.dark = false;
+        this.enableMode("light");
+      } else {
+        this.$vuetify.theme.dark = true;
+        this.enableMode("dark");
+      }
+    },
+    enableUserColor(){
+      this.$vuetify.theme.themes.light.primary =
+              this.$vuetify.theme.themes.dark.primary
+    },
+    switchUserColor(){
+
     }
   }
 };

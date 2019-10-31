@@ -74,10 +74,11 @@ export default {
           password: this.password,
           c_password: this.c_password
         };
-        let axiosConfig = {};
 
         this.$http
-          .post(this.$baseURI + "register", postData, axiosConfig)
+          .post(this.$baseURI + "register", postData, {
+            headers: { Authorization: "Bearer " + this.$cookies.get("token") }
+          })
           .then(res => {
             if (res.data["success"] != null) {
               router.push({

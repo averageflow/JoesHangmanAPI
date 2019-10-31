@@ -16,6 +16,7 @@ class MyUser extends Model
     protected $table = "users";
 
     /**
+     * Retrieve user details by specified email
      * @param string $email
      * @return MyUser
      */
@@ -25,11 +26,12 @@ class MyUser extends Model
     }
 
     /**
-     * @param int $id
+     * Retrieve user details by specified ID
+     * @param int $userID
      * @return array
      */
-    public static function getUserByID(int $id): array
+    public static function getUserByID(int $userID): array
     {
-        return (array)(new MyUser)->where('id', '=', $id)->first();
+        return (array)(new MyUser)->where('id', '=', $userID)->first();
     }
 }

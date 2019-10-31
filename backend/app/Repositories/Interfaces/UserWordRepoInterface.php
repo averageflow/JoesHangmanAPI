@@ -8,32 +8,32 @@ use Illuminate\Http\JsonResponse;
 
 interface UserWordRepoInterface
 {
-    public function getCurrentWord(string $user): JsonResponse;
+    public function getCurrentWord(string $userEmail): JsonResponse;
 
-    public function getRandomWord(string $user): JsonResponse;
+    public function getRandomWord(string $userEmail): JsonResponse;
 
-    public function getUserWordData(int $id): UserWord;
+    public function getUserWordData(int $userID): UserWord;
 
     public function replaceGuessedLetters(array $letters, string $requestedLetter, array $dashes): string;
 
-    public function renewUserWords(int $id, array $words, int $lives): void;
+    public function renewUserWords(int $userID, array $words, int $lives): void;
 
-    public function lostGameUpdateDB(int $id, string $formattedBlacklist, int $lives, string $solution): void;
+    public function lostGameUpdateDB(int $userID, string $formattedBlacklist, int $lives, string $solution): void;
 
-    public function badGuessUpdateDB(int $id, int $lives, string $formattedBlacklist): void;
+    public function badGuessUpdateDB(int $userID, int $lives, string $formattedBlacklist): void;
 
-    public function goodGuessUpdateDB(int $id, string $dashes, string $solution, int $lives, string $formattedBlacklist): JsonResponse;
+    public function goodGuessUpdateDB(int $userID, string $dashes, string $solution, int $lives, string $formattedBlacklist): JsonResponse;
 
     public function wonGameResponse(int $lives, string $formattedBlacklist, string $dashes): JsonResponse;
 
     public function lostGameResponse(MyUser $user, int $lives, string $formattedBlacklist, string $solution): JsonResponse;
 
-    public function getSolution(int $id): string;
+    public function getSolution(int $userID): string;
 
-    public function getLives(int $id): int;
+    public function getLives(int $userID): int;
 
-    public function getFrontEndWord(int $id): string;
+    public function getFrontEndWord(int $userID): string;
 
-    public function getBlacklist(int $id): string;
+    public function getBlacklist(int $userID): string;
 
 }

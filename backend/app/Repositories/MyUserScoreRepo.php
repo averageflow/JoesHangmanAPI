@@ -27,7 +27,7 @@ class MyUserScoreRepo implements MyUserScoreRepoInterface
     {
         $user = $this->usersRepo->getUserByEmail($user);
 
-        $score = MyUserScore::getUserScore(intval($user->id));
+        $score = MyUserScore::getUserScore(intval($user["id"]));
         if ($score) {
             return response()->json($score);
         }
@@ -65,7 +65,7 @@ class MyUserScoreRepo implements MyUserScoreRepoInterface
      */
     public function increaseWins(MyUser $user): void
     {
-        $currentID = intval($user->id);
+        $currentID = intval($user["id"]);
         $wins = MyUserScore::getWinsByID($currentID);
         MyUserScore::updateUserWins($currentID, $wins + 1);
     }
@@ -78,7 +78,7 @@ class MyUserScoreRepo implements MyUserScoreRepoInterface
      */
     public function increaseLosses(MyUser $user): void
     {
-        $currentID = intval($user->id);
+        $currentID = intval($user["id"]);
         $losses = MyUserScore::getLossesByID($currentID);
         MyUserScore::updateUserLosses($currentID, $losses + 1);
     }

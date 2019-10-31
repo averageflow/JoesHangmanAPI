@@ -72,14 +72,14 @@ class UserWord extends Model
     }
 
     /**
-     * @param int $id
+     * @param int $userID
      * @param array $words
      * @param int $lives
      */
-    public static function renewUserWords(int $id, array $words, int $lives)
+    public static function renewUserWords(int $userID, array $words, int $lives)
     {
         (new UserWord)->updateOrInsert(
-            ['user_id' => $id],
+            ['user_id' => $userID],
             [
                 'word' => $words["solution"],
                 'frontend_word' => $words["enigma"],

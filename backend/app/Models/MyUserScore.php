@@ -15,6 +15,7 @@ class MyUserScore extends Model
     protected $table = "users_scores";
 
     /**
+     *
      * @param int $userID
      * @return array
      */
@@ -26,39 +27,41 @@ class MyUserScore extends Model
     }
 
     /**
-     * @param int $id
-     * @return MyUserScore
+     * @param int $userID
+     * @return int
      */
-    public static function getWinsByID(int $id): MyUserScore
+    public static function getWinsByID(int $userID): int
     {
-        return (new MyUserScore)->where('id', '=', $id)->first()->wins;
+        $wins = (new MyUserScore)->where('id', '=', $userID)->first()->wins;
+        return intval($wins);
     }
 
     /**
-     * @param int $id
-     * @return MyUserScore
+     * @param int $userID
+     * @return int
      */
-    public static function getLossesByID(int $id): MyUserScore
+    public static function getLossesByID(int $userID): int
     {
-        return (new MyUserScore)->where('id', '=', $id)->first()->losses;
+        $losses = (new MyUserScore)->where('id', '=', $userID)->first()->losses;
+        return intval($losses);
     }
 
     /**
-     * @param int $id
+     * @param int $userID
      * @param int $wins
      */
-    public static function updateUserWins(int $id, int $wins): void
+    public static function updateUserWins(int $userID, int $wins): void
     {
-        (new MyUserScore)->updateOrInsert(['id' => $id], ['wins' => $wins]);
+        (new MyUserScore)->updateOrInsert(['id' => $userID], ['wins' => $wins]);
     }
 
     /**
-     * @param int $id
+     * @param int $userID
      * @param int $losses
      */
-    public static function updateUserLosses(int $id, int $losses): void
+    public static function updateUserLosses(int $userID, int $losses): void
     {
-        (new MyUserScore)->updateOrInsert(['id' => $id], ['losses' => $losses]);
+        (new MyUserScore)->updateOrInsert(['id' => $userID], ['losses' => $losses]);
     }
 
 }

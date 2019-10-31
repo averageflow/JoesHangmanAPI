@@ -23,12 +23,12 @@ class MyUserRepo implements MyUserRepoInterface
     /**
      * Return user details when ID is provided
      *
-     * @param int $id
+     * @param int $userID
      * @return JsonResponse
      */
-    public function getUserByID(int $id): JsonResponse
+    public function getUserByID(int $userID): JsonResponse
     {
-        $userDetails = MyUser::getUserByID($id);
+        $userDetails = MyUser::getUserByID($userID);
         return response()->json($userDetails);
     }
 }
