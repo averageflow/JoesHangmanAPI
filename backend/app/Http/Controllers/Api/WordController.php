@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use App\Repositories\Interfaces\UserWordsRepoInterface;
-use App\Repositories\Interfaces\WordsRepoInterface;
+use App\Repositories\Interfaces\UserWordRepoInterface;
+use App\Repositories\Interfaces\WordRepoInterface;
 
 class WordController extends Controller
 {
     private $userWordsRepo;
     private $wordsRepo;
 
-    public function __construct(UserWordsRepoInterface $userWordsRepo, WordsRepoInterface $wordsRepo)
+    public function __construct(UserWordRepoInterface $userWordsRepo, WordRepoInterface $wordsRepo)
     {
         $this->userWordsRepo = $userWordsRepo;
         $this->wordsRepo = $wordsRepo;

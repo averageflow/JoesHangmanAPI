@@ -2,19 +2,20 @@
 
 namespace App\Repositories;
 
-use App\Models\UserScores;
-use App\Models\Users;
-use App\Repositories\Interfaces\UserScoresRepoInterface;
+use App\Models\MyUserScore;
+use App\Models\MyUser;
+
+use App\Repositories\Interfaces\MyUserScoreRepoInterface;
 use Illuminate\Http\JsonResponse;
 
 
-class UserScoresRepo implements UserScoresRepoInterface
+class MyUserScoreRepo implements MyUserScoreRepoInterface
 {
     protected $usersRepo;
 
     public function __construct()
     {
-        $this->usersRepo = new UsersRepo();
+        $this->usersRepo = new MyUserRepo();
     }
 
     /**
@@ -27,7 +28,7 @@ class UserScoresRepo implements UserScoresRepoInterface
     {
         $user = $this->usersRepo->getUserByEmail($user);
 
-        $score = UserScores::getUserScore($user->id);
+        $score = MyUserScore::getUserScore(intval($user->id));
         if ($score) {
             return response()->json($score);
         }
@@ -60,24 +61,26 @@ class UserScoresRepo implements UserScoresRepoInterface
     /**
      * Increase user's wins
      *
-     * @param Users $user
+     * @param MyUser $user
      * @return void
      */
-    public function increaseWins(Users $user): void
+    public function increaseWins(MyUser $user): void
     {
-        $wins = UserScores::getWinsByID($user->id);
-        UserScores::updateUserWins($user->id, $wins + 1);
+        $currentID = intval($user->id);
+        $wins = MyUserScore::getWinsByID($currentID);
+        MyUserScore::updateUserWins($currentID, $wins + 1);
     }
 
     /**
      * Increase user's losses
      *
-     * @param Users $user
+     * @param MyUser $user
      * @return void
      */
-    public function increaseLosses(Users $user): void
+    public function increaseLosses(MyUser $user): void
     {
-        $losses = UserScores::getLossesByID($user->id);
-        UserScores::updateUserLosses($user->id, $losses + 1);
+        $currentID = intval($user->id);
+        $losses = MyUserScore::getLossesByID($currentID);
+        MyUserScore::updateUserLosses($currentID, $losses + 1);
     }
 }

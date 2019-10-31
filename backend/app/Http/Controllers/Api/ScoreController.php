@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use App\Repositories\Interfaces\UserScoresRepoInterface;
+use App\Repositories\Interfaces\MyUserScoreRepoInterface;
 
 /**
  * Controls the get and set methods of the score
@@ -13,7 +13,7 @@ class ScoreController extends Controller
 {
     private $userScoresRepo;
 
-    public function __construct(UserScoresRepoInterface $userScoresRepo)
+    public function __construct(MyUserScoreRepoInterface $userScoresRepo)
     {
         $this->userScoresRepo = $userScoresRepo;
     }

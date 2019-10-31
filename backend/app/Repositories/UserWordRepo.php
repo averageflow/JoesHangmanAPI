@@ -2,21 +2,22 @@
 
 namespace App\Repositories;
 
-use App\Models\UserWords;
-use App\Models\Users;
+use App\Models\UserWord;
+use App\Models\MyUser;
 
-use App\Repositories\Interfaces\UserWordsRepoInterface;
+use App\Repositories\Interfaces\UserWordRepoInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
-class UserWordsRepo implements UserWordsRepoInterface
+class UserWordRepo implements UserWordRepoInterface
 {
     protected $wordsRepo;
     protected $usersRepo;
 
     public function __construct()
     {
-        $this->wordsRepo = new WordsRepo();
-        $this->usersRepo = new UsersRepo();
+        $this->wordsRepo = new WordRepo();
+        $this->usersRepo = new MyUserRepo();
     }
 
     /**
@@ -28,11 +29,15 @@ class UserWordsRepo implements UserWordsRepoInterface
     public function getCurrentWord(string $user): JsonResponse
     {
 
-        $userID = $this->usersRepo->getUserByEmail($user)->id;
+        $user = $this->usersRepo->getUserByEmail($user);
 
-        $currentWord = UserWords::getFrontendWord($userID);
-        $lives = UserWords::getLives($userID);
-        $blacklist = UserWords::getBlacklist($userID);
+        $currentID = intval($user["id"]);
+
+        Log::error($currentID);
+
+        $currentWord = UserWord::getFrontendWord($currentID);
+        $lives = UserWord::getLives($currentID);
+        $blacklist = UserWord::getBlacklist($currentID);
 
         if (!$currentWord || !$lives || !$blacklist) {
             return response()->json(['status' => 'No records available!']);
@@ -51,36 +56,37 @@ class UserWordsRepo implements UserWordsRepoInterface
     public function getRandomWord(string $user): JsonResponse
     {
         $words = $this->wordsRepo->fetchNewFrontEndWord($user);
+        if ($words) {
+            $userID = intval($this->usersRepo->getUserByEmail($user)["id"]);
+            $this->renewUserWords($userID, $words, 12);
+            return response()->json(['word' => $words["enigma"], 'lives' => 12]);
+        }
+        return response()->json(['error' => 'There was an error fetching a new word!']);
 
-        $userID = $this->usersRepo->getUserByEmail($user)->id;
-        $this->renewUserWords($userID, $words, 12);
-        return response()->json(['word' => $words["enigma"], 'lives' => 12]);
-
-        //  return response()->json(['error' => 'There was an error fetching a new word!']);
     }
 
     /**
      * Renew DB data for user's word
      *
-     * @param string $id
+     * @param int $id
      * @param array $words
      * @param int $lives
      * @return void
      */
-    public function renewUserWords(string $id, array $words, int $lives): void
+    public function renewUserWords(int $id, array $words, int $lives): void
     {
-        UserWords::renewUserWords($id, $words, $lives);
+        UserWord::renewUserWords($id, $words, $lives);
     }
 
     /**
      * Get user word data for the game
      *
-     * @param string $id
-     * @return UserWords
+     * @param int $id
+     * @return UserWord
      */
-    public function getUserWordData(string $id): UserWords
+    public function getUserWordData(int $id): UserWord
     {
-        return UserWords::getUserWordData($id);
+        return UserWord::getUserWordData($id);
     }
 
     /**
@@ -105,22 +111,22 @@ class UserWordsRepo implements UserWordsRepoInterface
     /**
      * Update lives and blacklist on bad guess
      *
-     * @param string $id
+     * @param int $id
      * @param integer $lives
      * @param string $formattedBlacklist
      * @return void
      */
-    public function badGuessUpdateDB(string $id, int $lives, string $formattedBlacklist): void
+    public function badGuessUpdateDB(int $id, int $lives, string $formattedBlacklist): void
     {
-        (new UserWords)->updateOrInsert(
+        (new UserWord)->updateOrInsert(
             ['user_id' => $id],
             ['lives' => $lives, 'blacklist' => $formattedBlacklist]
         );
     }
 
-    public function goodGuessUpdateDB(string $id, string $dashes, string $solution, int $lives, string $formattedBlacklist)
+    public function goodGuessUpdateDB(int $id, string $dashes, string $solution, int $lives, string $formattedBlacklist): JsonResponse
     {
-        (new UserWords)->updateOrInsert(
+        (new UserWord)->updateOrInsert(
             ['user_id' => $id],
             ['frontend_word' => $dashes]
         );
@@ -158,15 +164,15 @@ class UserWordsRepo implements UserWordsRepoInterface
     /**
      * Update DB and return lost game response
      *
-     * @param Users $user
+     * @param MyUser $user
      * @param int $lives
      * @param string $formattedBlacklist
      * @param string $solution
      * @return JsonResponse
      */
-    public function lostGameResponse(Users $user, int $lives, string $formattedBlacklist, string $solution): JsonResponse
+    public function lostGameResponse(MyUser $user, int $lives, string $formattedBlacklist, string $solution): JsonResponse
     {
-        $this->lostGameUpdateDB($user->id, $formattedBlacklist, $lives, $solution);
+        $this->lostGameUpdateDB(intval($user->id), $formattedBlacklist, $lives, $solution);
         return response()->json([
             'victory' => false,
             'lives' => 0,
@@ -179,15 +185,15 @@ class UserWordsRepo implements UserWordsRepoInterface
     /**
      * Renew DB data for user's word
      *
-     * @param string $id
+     * @param int $id
      * @param string $formattedBlacklist
      * @param int $lives
      * @param string $solution
      * @return void
      */
-    public function lostGameUpdateDB(string $id, string $formattedBlacklist, int $lives, string $solution): void
+    public function lostGameUpdateDB(int $id, string $formattedBlacklist, int $lives, string $solution): void
     {
-        (new UserWords)->updateOrInsert(
+        (new UserWord)->updateOrInsert(
             ['user_id' => $id],
             [
                 'lives' => $lives,
@@ -197,23 +203,23 @@ class UserWordsRepo implements UserWordsRepoInterface
         );
     }
 
-    public function getSolution($id)
+    public function getSolution(int $id): string
     {
-        return UserWords::getSolution($id);
+        return UserWord::getSolution($id);
     }
 
-    public function getFrontEndWord($id)
+    public function getFrontEndWord(int $id): string
     {
-        return UserWords::getFrontendWord($id);
+        return UserWord::getFrontendWord($id);
     }
 
-    public function getLives($id)
+    public function getLives(int $id): int
     {
-        return intval(UserWords::getLives($id));
+        return intval(UserWord::getLives($id));
     }
 
-    public function getBlacklist($id)
+    public function getBlacklist(int $id): string
     {
-        return UserWords::getBlacklist($id);
+        return UserWord::getBlacklist($id);
     }
 }

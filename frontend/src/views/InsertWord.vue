@@ -34,6 +34,10 @@
 
 <script>
 import router from "../router";
+
+
+
+
 export default {
   name: "InsertWord",
   props: {
@@ -41,8 +45,8 @@ export default {
   },
   data: () => ({
     word: "",
-    languages: ["English", "Nederlands", "Català", "Português"],
-    locales: { English: "en", Nederlands: "nl", Català: "ca", Português:"pt" },
+    locales: {},
+    languages: [],
     chosenLanguage: "English",
     netError: null,
     successInserting: null,
@@ -52,6 +56,8 @@ export default {
   mounted() {
     this.currentStatus = Boolean(this.$cookies.get("authenticated"));
     this.currentUser = String(this.$cookies.get("currentUser"));
+    this.locales = this.$myLocales;
+    this.languages = this.$myLanguages;
 
     if (this.currentStatus === true) {
       //pass;

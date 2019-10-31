@@ -4,14 +4,14 @@ namespace App\Providers;
 
 use App\Repositories\GameRepo;
 use App\Repositories\Interfaces\GameRepoInterface;
-use App\Repositories\UserScoresRepo;
-use App\Repositories\Interfaces\UserScoresRepoInterface;
-use App\Repositories\UserWordsRepo;
-use App\Repositories\Interfaces\UserWordsRepoInterface;
-use App\Repositories\WordsRepo;
-use App\Repositories\Interfaces\UsersRepoInterface;
-use App\Repositories\UsersRepo;
-use App\Repositories\Interfaces\WordsRepoInterface;
+use App\Repositories\MyUserScoreRepo;
+use App\Repositories\Interfaces\MyUserScoreRepoInterface;
+use App\Repositories\UserWordRepo;
+use App\Repositories\Interfaces\UserWordRepoInterface;
+use App\Repositories\WordRepo;
+use App\Repositories\Interfaces\MyUserRepoInterface;
+use App\Repositories\MyUserRepo;
+use App\Repositories\Interfaces\WordRepoInterface;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -19,20 +19,20 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            UserScoresRepoInterface::class,
-            UserScoresRepo::class
+            MyUserScoreRepoInterface::class,
+            MyUserScoreRepo::class
         );
         $this->app->bind(
-            UserWordsRepoInterface::class,
-            UserWordsRepo::class
+            UserWordRepoInterface::class,
+            UserWordRepo::class
         );
         $this->app->bind(
-            UsersRepoInterface::class,
-            UsersRepo::class
+            MyUserRepoInterface::class,
+            MyUserRepo::class
         );
         $this->app->bind(
-            WordsRepoInterface::class,
-            WordsRepo::class
+            WordRepoInterface::class,
+            WordRepo::class
         );
         $this->app->bind(
             GameRepoInterface::class,

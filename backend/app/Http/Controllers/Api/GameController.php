@@ -30,7 +30,7 @@ class GameController extends Controller
 
         if ($requestedLetter && request('user')) {
 
-            (new GameRepo)->respondToGuess(request('letter'), request('user'));
+            return (new GameRepo)->respondToGuess($requestedLetter, request('user'));
         }
         return response()->json(["error" => "Your guess was empty!"]);
     }

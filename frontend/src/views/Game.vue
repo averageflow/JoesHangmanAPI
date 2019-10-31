@@ -14,7 +14,7 @@
             <h3 style="color:red;letter-spacing:0.6em;">
               {{ this.blacklist }}
             </h3>
-            <img width="50%" v-bind:src="hangmanImage" alt="Hangman Image" />
+            <img width="50%" v-bind:src="hangmanImage" />
             <h3 style="letter-spacing:0.6em;">{{ this.currentWord }}</h3>
           </v-card-text>
           <v-card-actions>

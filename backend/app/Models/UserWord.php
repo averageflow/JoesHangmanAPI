@@ -4,41 +4,46 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Model describing the users words table in DB
  * Consists of user_id, word, frontend_word, lives, blacklist and user language
  * @mixin Builder
  */
-class UserWords extends Model
+class UserWord extends Model
 {
     protected $table = "users_words";
 
     /**
      * @param $userID
-     * @return UserWords
+     * @return string
      */
-    public static function getFrontendWord($userID)
+    public static function getFrontendWord(int $userID): string
     {
-        return (new UserWords)->select('frontend_word')
+        return (new UserWord)->select('frontend_word')
             ->where('user_id', '=', $userID)
             ->first()->frontend_word;
     }
 
-    public static function getSolution($userID)
+    /**
+     * @param int $userID
+     * @return string
+     */
+    public static function getSolution(int $userID): string
     {
-        return (new UserWords)->select('word')
+        return (new UserWord)->select('word')
             ->where('user_id', '=', $userID)
             ->first()->word;
     }
 
     /**
-     * @param $userID
-     * @return UserWords
+     * @param int $userID
+     * @return int
      */
-    public static function getLives($userID)
+    public static function getLives(int $userID): int
     {
-        $lives = (new UserWords)->select('lives')
+        $lives = (new UserWord)->select('lives')
             ->where('user_id', '=', $userID)
             ->first()->lives;
 
@@ -46,35 +51,35 @@ class UserWords extends Model
     }
 
     /**
-     * @param $userID
-     * @return UserWords
+     * @param int $userID
+     * @return string
      */
-    public static function getBlacklist($userID)
+    public static function getBlacklist(int $userID):string
     {
-        return (new UserWords)->select('blacklist')
+        return (new UserWord)->select('blacklist')
             ->where('user_id', '=', $userID)
             ->first()->blacklist;
     }
 
     /**
-     * @param $userID
-     * @return UserWords
+     * @param int $userID
+     * @return string
      */
-    public static function getPreferredLanguage($userID)
+    public static function getPreferredLanguage(int $userID):string
     {
-        return (new UserWords)->select('prefered_language')
+        return (new UserWord)->select('prefered_language')
             ->where('user_id', '=', $userID)
             ->first()->prefered_language;
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @param array $words
      * @param int $lives
      */
-    public static function renewUserWords(string $id, array $words, int $lives)
+    public static function renewUserWords(int $id, array $words, int $lives)
     {
-        (new UserWords)->updateOrInsert(
+        (new UserWord)->updateOrInsert(
             ['user_id' => $id],
             [
                 'word' => $words["solution"],
@@ -89,11 +94,11 @@ class UserWords extends Model
      * Get user word data for the game
      *
      * @param string $userID
-     * @return UserWords
+     * @return UserWord
      */
     public static function getUserWordData($userID)
     {
-        return (new UserWords)->where('user_id', '=', $userID)->first();
+        return (new UserWord)->where('user_id', '=', $userID)->first();
     }
 }
 

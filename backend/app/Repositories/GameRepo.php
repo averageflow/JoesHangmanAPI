@@ -3,9 +3,10 @@
 namespace App\Repositories;
 
 
-use App\Models\Users;
+use App\Models\MyUser;
 use App\Repositories\Interfaces\GameRepoInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 
 class GameRepo implements GameRepoInterface
@@ -15,19 +16,21 @@ class GameRepo implements GameRepoInterface
 
     public function __construct()
     {
-        $this->userWordsRepo = new UserWordsRepo();
-        $this->usersRepo = new UsersRepo();
+        $this->userWordsRepo = new UserWordRepo();
+        $this->usersRepo = new MyUserRepo();
     }
 
-    public function respondToGuess(string $letter, string $user)
+    public function respondToGuess(string $letter, string $user): JsonResponse
     {
         $user = $this->usersRepo->getUserByEmail(request('user'));
+        $currentID = intval($user["id"]);
 
-        $solution = $this->userWordsRepo->getSolution($user->id);
-        $current = $this->userWordsRepo->getFrontEndWord($user->id);
+        $solution = $this->userWordsRepo->getSolution($currentID);
+        $current = $this->userWordsRepo->getFrontEndWord($currentID);
 
-        $lives = $this->userWordsRepo->getLives($user->id);
-        $blacklist = explode(" ", $this->userWordsRepo->getBlacklist($user->id));
+        $lives = $this->userWordsRepo->getLives($currentID);
+        $blacklist = explode(" ", $this->userWordsRepo->getBlacklist($currentID));
+
         return $this->gameEval($lives, $solution, $current, $blacklist, $letter, $user);
     }
 
@@ -39,12 +42,13 @@ class GameRepo implements GameRepoInterface
      * @param string $current
      * @param array $blacklist
      * @param string $requestedLetter
-     * @param Users $user
+     * @param MyUser $user
      * @return JsonResponse
      */
-    public function gameEval(int $lives, string $solution, string $current, array $blacklist, string $requestedLetter, Users $user): JsonResponse
+    public function gameEval(int $lives, string $solution, string $current, array $blacklist, string $requestedLetter, MyUser $user): JsonResponse
     {
         $formattedBlacklist = implode(' ', $blacklist);
+        $currentID = intval($user["id"]);
 
         if ($lives > 0) {
             $letters = str_split($solution);
@@ -52,14 +56,15 @@ class GameRepo implements GameRepoInterface
 
             if (in_array($requestedLetter, $letters)) {
                 $dashes = $this->userWordsRepo->replaceGuessedLetters($letters, $requestedLetter, $dashes);
-                return $this->userWordsRepo->goodGuessUpdateDB($user->id, $dashes, $solution, $lives, $formattedBlacklist);
+                return $this->userWordsRepo->goodGuessUpdateDB($currentID, $dashes, $solution, $lives, $formattedBlacklist);
             }
             //BAD GUESS
             $lives--;
             array_push($blacklist, $requestedLetter);
             $formattedBlacklist = implode(' ', $blacklist);
+
             if ($lives > 0) {
-                $this->userWordsRepo->badGuessUpdateDB($user->id, $lives, $formattedBlacklist);
+                $this->userWordsRepo->badGuessUpdateDB($currentID, $lives, $formattedBlacklist);
 
                 return response()->json([
                     'successGuessing' => false,

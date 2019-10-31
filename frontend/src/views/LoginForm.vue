@@ -45,9 +45,6 @@
 <script>
 import router from "../router";
 
-function getKeyByValue(object, value) {
-  return Object.keys(object).find(key => object[key] === value);
-}
 
 export default {
   name: "LoginForm",
@@ -58,23 +55,28 @@ export default {
   },
   data: () => ({
     justCreated: false,
-    languages: ["English", "Nederlands", "Català", "Português"],
-    locales: { English: "en", Nederlands: "nl", Català: "ca", Português:"pt" },
+    locales: {},
+    languages: [],
     chosenLanguage: "English",
     login: null,
     password: null
   }),
   mounted() {
     this.justCreated = this.$route.params["justCreatedAccount"];
-    this.chosenLanguage = getKeyByValue(
-      this.locales,
-      this.$cookies.get("language")
-    );
+    this.chosenLanguage = this.locales[this.$cookies.get("language")];
+    this.locales = this.$myLocales;
+    this.languages = this.$myLanguages;
   },
   methods: {
     changeAppLocale() {
-      this.$i18n.locale = this.locales[this.chosenLanguage];
-      this.$cookies.set("language", this.locales[this.chosenLanguage]);
+      console.log(this.chosenLanguage);
+      const currentChoice = this.$getKeyByValue(
+        this.locales,
+        this.chosenLanguage
+      );
+      console.log(currentChoice);
+      this.$i18n.locale = currentChoice;
+      this.$cookies.set("language", currentChoice);
     },
     performLogin() {
       const postData = {

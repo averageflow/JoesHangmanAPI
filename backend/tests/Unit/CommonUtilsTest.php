@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\UserWordsRepo;
+use App\Repositories\UserWordRepo;
 
 class CommonUtilsTest extends TestCase
 {
@@ -42,7 +42,7 @@ class CommonUtilsTest extends TestCase
      */
     public function testGetUserWordData(): void
     {
-        $utils = new UserWordsRepo();
+        $utils = new UserWordRepo();
 
         $this->assertEquals(DB::table('users_words')->where('user_id', '=', "1")->first(), $utils->getUserWordData('support@testuser.com'));
     }

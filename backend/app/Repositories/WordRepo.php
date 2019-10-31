@@ -2,19 +2,19 @@
 
 namespace App\Repositories;
 
-use App\Models\Words;
-use App\Models\UserWords;
-use App\Repositories\Interfaces\WordsRepoInterface;
+use App\Models\Word;
+use App\Models\UserWord;
+use App\Repositories\Interfaces\WordRepoInterface;
 use Illuminate\Http\JsonResponse;
 
 
-class WordsRepo implements WordsRepoInterface
+class WordRepo implements WordRepoInterface
 {
     protected $usersRepo;
 
     public function __construct()
     {
-        $this->usersRepo = new UsersRepo();
+        $this->usersRepo = new MyUserRepo();
     }
 
     /**
@@ -26,7 +26,7 @@ class WordsRepo implements WordsRepoInterface
      */
     public function insertNewWord(string $word, string $language): JsonResponse
     {
-        Words::insertNewWord($word, $language);
+        Word::insertNewWord($word, $language);
         return response()->json(['success' => true]);
     }
 
@@ -39,7 +39,7 @@ class WordsRepo implements WordsRepoInterface
     public function fetchNewFrontEndWord(string $user): array
     {
         $userLang = $this->getUserLang($user);
-        $randomWord = Words::retrieveRandomWord($userLang);
+        $randomWord = Word::retrieveRandomWord($userLang);
         $frontEndWord = "";
 
         for ($i = 0; $i < strlen($randomWord); $i++) {
@@ -56,8 +56,8 @@ class WordsRepo implements WordsRepoInterface
      */
     public function getUserLang(string $user): string
     {
-        $userID = $this->usersRepo->getUserByEmail($user)->id;
-        return UserWords::getPreferredLanguage($userID);
+        $userID = $this->usersRepo->getUserByEmail($user)["id"];
+        return UserWord::getPreferredLanguage($userID);
     }
 
     /**
