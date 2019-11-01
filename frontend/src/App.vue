@@ -61,6 +61,8 @@
                   :key="i"
 
           >
+            <div :style="getColorCircle(item)"></div>
+            <v-spacer></v-spacer>
             <v-list-item-title>{{ item }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -140,6 +142,11 @@ export default {
         name: "game",
         authenticated: this.$cookies.get("authenticated")
       });
+    },
+    getColorCircle(color){
+      return (
+        "background: " + color + "; border-radius:100%; height:20px;width:20px;"
+      );
     },
     goToRegister() {
       router.push({ name: "register" });
